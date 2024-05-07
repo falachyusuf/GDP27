@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Departement</title>
+  </head>
+  <body>
+    <a th:href="@{/api/v1/department/form/post}"><button>Add Department</button></a>
+    <table border="1">
+      <thead>
+        <tr>
+          <th>Id</th>
+          <th>Department Name</th>
+          <th>Department Region</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="Department: ${departments}">
+          <th th:text="${Department.id}"></th>
+          <th th:text="${Department.name}"></th>
+          <th th:text="${Department.region.name}"></th>
+          <th>
+            <a th:href="@{/api/v1/department/form/edit/{id}(id=${Department.id})}"><button>Edit</button></a>
+            <form th:action="@{/api/v1/department/delete/{id}(id=${Department.id})}">
+              <button>Delete</button>
+            </form>
+          </th>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

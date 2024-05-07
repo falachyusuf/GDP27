@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<br>
+<form th:action="@{/api/v1/department/submit}" method="post">
+    <input placeholder="Input department id here" type="hidden" th:field="${department.id}">
+    <label for="department name">Department Name</label></br>
+    <input placeholder="Input department name here" th:field="${department.name}"></br>
+    <select name="region name" th:field="${department.region}">
+        <option value="" disabled selected>Select region</option>
+        <option th:each="Region : ${regionOptions}" th:value="${Region.id}" th:text="${Region.name}"></option>
+    </select></br>
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

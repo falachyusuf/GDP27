@@ -94,11 +94,11 @@ public class AuthController {
         Optional<User> optional = userRepository.findById(employee.getId());
 
         if (optional.isEmpty()) {
-            return "redirect:login/form?error=true";
+            return "redirect:form?error=true";
         }
         
         if (!optional.get().getPassword().equals(password)) {
-            return "redirect:login/form?error=true";
+            return "redirect:form?error=true";
         }
       
         LoginResponseDTO response = new LoginResponseDTO();

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Roles</title>
+</head>
+
+<body>
+    <a th:href="@{role/form}">CREATE</a>
+    <table border="1px">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="role : ${roles}">
+                <td th:text="${role.id}"></td>
+                <td th:text="${role.name}"></td>
+                <td>
+                    <form method="POST" th:action="@{/api/v1/role/delete/{id}(id=${role.id})}">
+                        <button type="submit">DELETE</button>
+                    </form>
+                    <a th:href="@{/api/v1/role/form/edit/{id}(id=${role.id})}">EDIT</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+
+</html>

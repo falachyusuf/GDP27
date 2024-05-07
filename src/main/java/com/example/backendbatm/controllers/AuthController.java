@@ -145,7 +145,7 @@ public class AuthController {
         String email = changeDTO.getEmail();
         String oldPassword = changeDTO.getOldPassword();
         String newPassword = changeDTO.getNewPassword();
-        Employee employee = employeeRepository.findByEmail(email);
+        Employee employee = employeeRepository.findEmpByEmail(email);
 
         try {
             User user = userRepository.findById(employee.getId()).get();

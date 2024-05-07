@@ -30,12 +30,12 @@ public class AuthController {
     private UserRepository userRepository;
 
     @GetMapping
-    public String index (){
+    public String index() {
         return "auth/index";
     }
 
     @GetMapping("register/form")
-    private String registerForm(Model model){
+    private String registerForm(Model model) {
         model.addAttribute("register", new RegisterDTO());
         model.addAttribute("roleOptions", roleRepository.findAll());
         return "auth/register/form";
@@ -48,7 +48,7 @@ public class AuthController {
         String password = registerDTO.getPassword();
         String confPassword = registerDTO.getConfPassword();
         Role role = registerDTO.getRole();
-        if (!password.equals(confPassword)){
+        if (!password.equals(confPassword)) {
             System.out.println("Password not match");
             return "redirect:/api/v1/auth/register/form";
         }
@@ -58,9 +58,9 @@ public class AuthController {
         employee.setEmail(email);
         Employee employeeSaved = employeeRepository.save(employee);
 
-        if(employeeSaved == null){
+        if (employeeSaved == null) {
             System.out.println("Employee data does not exist");
-        }else{
+        } else {
             User user = new User();
             user.setId(employeeSaved.getId());
             user.setPassword(password);
@@ -72,32 +72,52 @@ public class AuthController {
     }
 
     @GetMapping("login/form")
-    public String loginForm(Model model){
+    public String loginForm(Model model) {
         return "/auth/login/form";
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(LoginDTO loginDTO){
+    public String loginSubmit(LoginDTO loginDTO) {
         return "/auth/login/submit";
     }
 
     @GetMapping("forgot/form")
-    public String forgotForm(Model model){
+    public String forgotForm(Model model) {
         return "/auth/forgot/form";
     }
 
     @PostMapping("forgot/submit")
-    public String forgotSubmit(ForgotDTO forgotDTO){
+    public String forgotSubmit(ForgotDTO forgotDTO) {
         return "/auth/login/submit";
     }
 
     @GetMapping("change/form")
-    public String changeForm(Model model){
-        return "/auth/change/form";
+    public String changeForm(Model model) {
+        model.addAttribute("auth", new ChangeDTO());
+        return "auth/change-password/form";
     }
 
     @PostMapping("change/submit")
-    public String changeSubmit(ChangeDTO changeDTO){
-        return "/auth/change/submit";
+    public String changeSubmit(ChangeDTO changeDTO) {
+        String email = changeDTO.getEmail();
+        String oldPassword = changeDTO.getOldPassword();
+        String newPassword = changeDTO.getNewPassword();
+        Employee employee = employeeRepository.findByEmail(email);
+
+        try {
+            User user = userRepository.findById(employee.getId()).get();
+            if (oldPassword.equals(user.getPassword())) {
+                user.setPassword(newPassword);
+                userRepository.save(user);
+                return "redirect:/api/v1/auth";
+            } else {
+                System.out.println("Old password and new password not match");
+                return "redirect:/api/v1/auth/change/form";
+            }
+        } catch (Exception e) {
+            System.out.println("Employee not found");
+            e.printStackTrace();
+            return "redirect:/api/v1/auth/change/form";
+        }
     }
 }

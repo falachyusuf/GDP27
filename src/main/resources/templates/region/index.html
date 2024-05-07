@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+</head>
+<body>
+    <th>TEST</th>
+    <a th:href="@{/region/form}">CREATE</a>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>ACTION</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each = "region : ${regions}">
+                <td th:text = ${region.id}></td>
+                <td th:text = ${region.name}></td>
+                <td><form
+                    method="POST"
+                    th:action="@{/region/delete/{id} (id=${region.id})}"
+                    ><button onclick="return confirm('Apakah anda yakin?')">DELETE</button></form>
+                    <a th:href="@{/region/form/{id} (id=${region.id})}">EDIT </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    
+        
+   
+    
+    
+</body>
+</html>

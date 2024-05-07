@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import com.example.backendbatm.repository.RegionRepository;
+import com.example.backendbatm.model.Region;
 
-import com.example.batch25.model.Region;
-import com.example.batch25.repository.RegionRepository;
 
 @Controller
 @RequestMapping("region")
@@ -32,7 +32,7 @@ public class RegionController {
         }
         return "region/form";
     }
-    
+
 
     @PostMapping("save")
     public String save(Region region){
@@ -55,8 +55,5 @@ public class RegionController {
         }
         return "redirect:/region";
     }
-
-    
-
 
 }

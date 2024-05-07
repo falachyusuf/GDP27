@@ -13,7 +13,7 @@ import com.example.backendbatm.repository.RoleRepository;
 import com.example.backendbatm.repository.UserRepository;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("/api/v1/users")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -41,12 +41,12 @@ public class UserController {
     @PostMapping("save")
     public String form(User user){
         userRepository.save(user);
-        return "redirect:/user";
+        return "redirect:/api/v1/users";
     }
 
     @PostMapping("delete/{id}")
 	public String deleteUser(@PathVariable(required = true) Integer id) {
 		userRepository.deleteById(id);
-		return "redirect:/user";
+		return "redirect:/api/v1/users";
 	}
 }

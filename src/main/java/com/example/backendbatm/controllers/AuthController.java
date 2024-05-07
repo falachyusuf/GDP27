@@ -140,7 +140,7 @@ public class AuthController {
         String email = forgotpassData.getEmail();
         String newPassword = forgotpassData.getNewPassword();
 
-        Employee employee = employeeRepository.findByEmail(email);
+        Employee employee = employeeRepository.findEmpByEmail(email);
         if(employee == null) {
             return "redirect:/api/v1/auth";
         }

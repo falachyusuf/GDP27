@@ -1,5 +1,7 @@
 package com.example.backendbatm.controllers;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.backendbatm.DTO.ChangeDTO;
+import com.example.backendbatm.DTO.LoginResponseDTO;
 import com.example.backendbatm.DTO.ForgotDTO;
 import com.example.backendbatm.DTO.LoginDTO;
 import com.example.backendbatm.DTO.RegisterDTO;
@@ -73,12 +76,37 @@ public class AuthController {
 
     @GetMapping("login/form")
     public String loginForm(Model model){
+        model.addAttribute("loginData", new LoginDTO());
         return "/auth/login/form";
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(LoginDTO loginDTO){
-        return "/auth/login/submit";
+    public String loginSubmit(LoginDTO loginDTO, Model model){
+        String email = loginDTO.getEmail();
+        String password = loginDTO.getPassword();
+
+        Employee employee = employeeRepository.findEmpByEmail(email);
+
+        if (employee == null) {
+            return "redirect:form?error=true";
+        }
+
+        Optional<User> optional = userRepository.findById(employee.getId());
+
+        if (optional.isEmpty()) {
+            return "redirect:form?error=true";
+        }
+        
+        if (!optional.get().getPassword().equals(password)) {
+            return "redirect:form?error=true";
+        }
+      
+        LoginResponseDTO response = new LoginResponseDTO();
+        response.setName(employee.getName());
+      
+        model.addAttribute("responseLogin", response);
+          
+        return "/user/index";
     }
 
     @GetMapping("forgot/form")
@@ -100,4 +128,29 @@ public class AuthController {
     public String changeSubmit(ChangeDTO changeDTO){
         return "/auth/change/submit";
     }
+
+    @GetMapping("forgotPassword")
+    public String forgotPassword(Model model){
+        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
+        return "auth/forgotPassword/form";
+    }
+
+    @PostMapping("resetPassword")
+    public String resetPassword(ForgotDTO forgotpassData) {
+        String email = forgotpassData.getEmail();
+        String newPassword = forgotpassData.getNewPassword();
+
+        Employee employee = employeeRepository.findEmpByEmail(email);
+        if(employee == null) {
+            return "redirect:/api/v1/auth";
+        }
+
+        if(newPassword != ""){
+            employee.getUser().setPassword(newPassword);
+            employeeRepository.save(employee);
+            return "redirect:/api/v1/auth";    
+        }
+        return "redirect:/api/v1/auth/forgotPassword";
+        
+    };
 }

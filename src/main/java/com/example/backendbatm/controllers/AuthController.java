@@ -33,12 +33,12 @@ public class AuthController {
     private UserRepository userRepository;
 
     @GetMapping
-    public String index (){
+    public String index() {
         return "auth/index";
     }
 
     @GetMapping("register/form")
-    private String registerForm(Model model){
+    private String registerForm(Model model) {
         model.addAttribute("register", new RegisterDTO());
         model.addAttribute("roleOptions", roleRepository.findAll());
         return "auth/register/form";
@@ -51,7 +51,7 @@ public class AuthController {
         String password = registerDTO.getPassword();
         String confPassword = registerDTO.getConfPassword();
         Role role = registerDTO.getRole();
-        if (!password.equals(confPassword)){
+        if (!password.equals(confPassword)) {
             System.out.println("Password not match");
             return "redirect:/api/v1/auth/register/form";
         }
@@ -61,9 +61,9 @@ public class AuthController {
         employee.setEmail(email);
         Employee employeeSaved = employeeRepository.save(employee);
 
-        if(employeeSaved == null){
+        if (employeeSaved == null) {
             System.out.println("Employee data does not exist");
-        }else{
+        } else {
             User user = new User();
             user.setId(employeeSaved.getId());
             user.setPassword(password);
@@ -71,17 +71,17 @@ public class AuthController {
             userRepository.save(user);
         }
 
-        return "redirect:/api/v1/department";
+        return "redirect:/api/v1/auth/login/form";
     }
 
     @GetMapping("login/form")
-    public String loginForm(Model model){
+    public String loginForm(Model model) {
         model.addAttribute("loginData", new LoginDTO());
-        return "/auth/login/form";
+        return "auth/login/form";
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(LoginDTO loginDTO, Model model){
+    public String loginSubmit(LoginDTO loginDTO, Model model) {
         String email = loginDTO.getEmail();
         String password = loginDTO.getPassword();
 
@@ -110,7 +110,7 @@ public class AuthController {
     }
 
     @GetMapping("forgotPassword")
-    public String forgotPassword(Model model){
+    public String forgotPassword(Model model) {
         model.addAttribute("forgotPasswordDTO", new ForgotDTO());
         return "auth/forgotPassword/form";
     }
@@ -121,16 +121,45 @@ public class AuthController {
         String newPassword = forgotpassData.getNewPassword();
 
         Employee employee = employeeRepository.findEmpByEmail(email);
-        if(employee == null) {
-            return "redirect:/api/v1/auth";
+        if (employee == null) {
+            return "redirect:/api/v1/auth/forgotPassword";
         }
 
-        if(newPassword != ""){
+        if (newPassword != "") {
             employee.getUser().setPassword(newPassword);
             employeeRepository.save(employee);
-            return "redirect:/api/v1/auth";
+            return "redirect:/api/v1/auth/login/form";
         }
-        return "redirect:/api/v1/auth/forgotPassword";
+        return "redirect:/api/v1/auth/login/form";
 
     };
+
+    @GetMapping("change/form")
+    public String changeForm(Model model) {
+        model.addAttribute("auth", new ChangeDTO());
+        return "auth/change-password/form";
+    }
+
+    @PostMapping("change/submit")
+    public String changeSubmit(ChangeDTO changeDTO) {
+        String email = changeDTO.getEmail();
+        String oldPassword = changeDTO.getOldPassword();
+        String newPassword = changeDTO.getNewPassword();
+        Employee employee = employeeRepository.findEmpByEmail(email);
+
+        try {
+            User user = userRepository.findById(employee.getId()).get();
+            if (oldPassword.equals(user.getPassword())) {
+                user.setPassword(newPassword);
+                userRepository.save(user);
+                return "redirect:/api/v1/auth/login/form";
+            } else {
+                return "redirect:/api/v1/auth/change/form";
+            }
+        } catch (Exception e) {
+            System.out.println("Employee not found");
+            e.printStackTrace();
+            return "redirect:/api/v1/auth/change/form";
+        }
+    }
 }

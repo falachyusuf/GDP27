@@ -71,13 +71,13 @@ public class AuthController {
             userRepository.save(user);
         }
 
-        return "redirect:/api/v1/department";
+        return "redirect:/api/v1/auth/login/form";
     }
 
     @GetMapping("login/form")
     public String loginForm(Model model) {
         model.addAttribute("loginData", new LoginDTO());
-        return "/auth/login/form";
+        return "auth/login/form";
     }
 
     @PostMapping("login/submit")
@@ -122,15 +122,15 @@ public class AuthController {
 
         Employee employee = employeeRepository.findEmpByEmail(email);
         if (employee == null) {
-            return "redirect:/api/v1/auth";
+            return "redirect:/api/v1/auth/forgotPassword";
         }
 
         if (newPassword != "") {
             employee.getUser().setPassword(newPassword);
             employeeRepository.save(employee);
-            return "redirect:/api/v1/auth";
+            return "redirect:/api/v1/auth/login/form";
         }
-        return "redirect:/api/v1/auth/forgotPassword";
+        return "redirect:/api/v1/auth/login/form";
 
     };
 
@@ -152,9 +152,8 @@ public class AuthController {
             if (oldPassword.equals(user.getPassword())) {
                 user.setPassword(newPassword);
                 userRepository.save(user);
-                return "redirect:/api/v1/auth";
+                return "redirect:/api/v1/auth/login/form";
             } else {
-                System.out.println("Old password and new password not match");
                 return "redirect:/api/v1/auth/change/form";
             }
         } catch (Exception e) {

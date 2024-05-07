@@ -1,11 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>User</title>
-</head>
-<body>
-  <h1>test</h1>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Users</title>
+  </head>
+  <body>
+    <a th:href="@{/user/form}">CREATE</a>
+    <table border="1px">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>EMPLOYEE</th>
+          <th>PASSWORD</th>
+          <th>ROLE</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="user : ${users}">
+          <td th:text="${user.id}"></td>
+          <td th:text="${user.employee.name}"></td>
+          <td th:text="${user.password}"></td>
+          <td th:text="${user.role.name}"></td>
+          <td>
+            <form method="POST" th:action="@{/user/delete/{id}(id=${user.id})}">
+              <button type="submit">DELETE</button>
+            </form>
+            <a th:href="@{/user/form/{id}(id=${user.id})}">EDIT</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
 </html>

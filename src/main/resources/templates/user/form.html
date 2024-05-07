@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New User</title>
+</head>
+<body>
+    <form th:action=@{/user/save} method="POST">
+        <div>
+            <label>ID</label>
+            <input th:field="${user.id}" />
+            <label>PASSWORD</label>
+            <input th:field="${user.password}" >
+
+            <label>Select Employee:</label>
+            <select th:field="${user.role}">
+                <option th:each="role: ${roles}" th:text="${role.name}" th:value="${role.id}"></option>
+            </select>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+</html>

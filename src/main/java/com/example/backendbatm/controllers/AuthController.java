@@ -128,4 +128,29 @@ public class AuthController {
     public String changeSubmit(ChangeDTO changeDTO){
         return "/auth/change/submit";
     }
+
+    @GetMapping("forgotPassword")
+    public String forgotPassword(Model model){
+        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
+        return "auth/forgotPassword/form";
+    }
+
+    @PostMapping("resetPassword")
+    public String resetPassword(ForgotDTO forgotpassData) {
+        String email = forgotpassData.getEmail();
+        String newPassword = forgotpassData.getNewPassword();
+
+        Employee employee = employeeRepository.findEmpByEmail(email);
+        if(employee == null) {
+            return "redirect:/api/v1/auth";
+        }
+
+        if(newPassword != ""){
+            employee.getUser().setPassword(newPassword);
+            employeeRepository.save(employee);
+            return "redirect:/api/v1/auth";    
+        }
+        return "redirect:/api/v1/auth/forgotPassword";
+        
+    };
 }

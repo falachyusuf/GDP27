@@ -3,11 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
-    <title>User</title>
+    <title>Users</title>
   </head>
   <body>
-    <h1 class="text-lg font-bold">Hello Word!</h1>
-    <a th:href="@{/api/v1/auth/change/form}"><button class="px-3 py-2 bg-indigo-500 rounded-md">Change Password</button></a>
+    <a th:href="@{/user/form}">CREATE</a>
+    <table border="1px">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>EMPLOYEE</th>
+          <th>PASSWORD</th>
+          <th>ROLE</th>
+          <th>ACTION</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="user : ${users}">
+          <td th:text="${user.id}"></td>
+          <td th:text="${user.employee.name}"></td>
+          <td th:text="${user.password}"></td>
+          <td th:text="${user.role.name}"></td>
+          <td>
+            <form method="POST" th:action="@{/api/v1/user/delete/{id}(id=${user.id})}">
+              <button type="submit">DELETE</button>
+            </form>
+            <a th:href="@{/api/v1/user/form/{id}(id=${user.id})}">EDIT</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </body>
 </html>

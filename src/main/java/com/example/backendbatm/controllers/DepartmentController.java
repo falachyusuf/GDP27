@@ -36,6 +36,7 @@ public class DepartmentController {
         model.addAttribute("regionOptions", regionRepository.findAll());
         return "department/form";
     }
+    
     @PostMapping("submit")
     private String submitDepartment(Department department){
         Department newDepartment = departmentRepository.save(department);

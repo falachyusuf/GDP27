@@ -106,7 +106,7 @@ public class AuthController {
 
         model.addAttribute("responseLogin", response);
 
-        return "/user/index";
+        return "/home/index";
     }
 
     @GetMapping("forgotPassword")

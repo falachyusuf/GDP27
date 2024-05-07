@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee</title>
+</head>
+<body>
+
+  <a th:href="@{/api/v1/employees/form}"><button>Create</button></a>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="employee : ${employees}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.name}"></td>
+        <td th:text="${employee.email}"></td>
+        <td>
+          <form method="GET" th:action="@{/api/v1/employees/form/{id}(id=${employee.id})}">
+            <button type="submit">Edit</button>
+          </form>
+        </td>
+        <td>
+          <form method="POST" th:action="@{/api/v1/employees/delete/{id}(id=${employee.id})}" >
+            <button onclick="return confirm('Apakah anda yakin untuk menghapus?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

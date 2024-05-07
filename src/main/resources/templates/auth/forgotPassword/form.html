@@ -3,18 +3,21 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Forgot Password</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login</title>
   </head>
   <body>
-    <form method="POST" th:action="@{/api/v1/auth/resetPassword}">
-      <div>
-        <label>Input Email</label>
-        <input type="text" th:field="${forgotPasswordDTO.email}"/>
-
-        <label>Input New Password</label>
-        <input type="text" th:field="${forgotPasswordDTO.newPassword}"/>
+    <div class="h-screen flex justify-center items-center bg-indigo-300">
+      <div class="w-3/12 p-5 bg-white rounded-md drop-shadow-2xl">
+        <h1 class="font-bold text-center">Forgot Password</h1>
+        <form method="POST" th:action="@{/api/v1/auth/resetPassword}" class="flex flex-col">
+          <label for="emailInput">Email :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="email" name="emailInput" required th:field="${forgotPasswordDTO.email}" />
+          <label for="passwordInput">New Password :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="password" name="passwordInput" required th:field="${forgotPasswordDTO.newPassword}" />
+          <button type="submit" class="bg-indigo-500 px-3 py-2 rounded-md text-white">Confirm Password</button>
+        </form>
       </div>
-      <button type="submit">Submit</button>
-    </form>
+    </div>
   </body>
 </html>

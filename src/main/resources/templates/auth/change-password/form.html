@@ -1,26 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Password</title>
-</head>
-
-<body>
-    <h3>Change Your Password</h3>
-    <form th:action="@{/api/v1/auth/change/submit}" method="post">
-        <label for="email">Email:</label>
-        <input th:field="${auth.email}" type="email" name="email" id="email"><br>
-
-        <label for="old_password">Old Password:</label>
-        <input th:field="${auth.oldPassword}" type="text" name="old_password" id="old_password"><br>
-
-        <label for="new_password">New Password</label>
-        <input th:field="${auth.newPassword}" type="text" name="new_password" id="new_password"><br>
-
-        <button type="submit">Change Password</button>
-    </form>
-</body>
-
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Login</title>
+  </head>
+  <body>
+    <div class="h-screen flex justify-center items-center bg-indigo-300">
+      <div class="w-3/12 p-5 bg-white rounded-md drop-shadow-2xl">
+        <h1 class="font-bold text-center">Change Password</h1>
+        <form method="POST" th:action="@{/api/v1/auth/change/submit}" class="flex flex-col">
+          <label for="emailInput">Email :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="email" name="emailInput" required th:field="${auth.email}" />
+          <label for="passwordInput">Old Password :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="password" name="passwordInput" required th:field="${auth.oldPassword}" />
+          <label for="passwordInput">New Password :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="password" name="passwordInput" required th:field="${auth.newPassword}" />
+          <button type="submit" class="bg-indigo-500 px-3 py-2 rounded-md text-white">Change Password</button>
+        </form>
+      </div>
+    </div>
+  </body>
 </html>
+
+<a th:href="@{/api/v1/auth/change/form}">Change Password</a>
+
+<!-- <form method="POST" th:action="@{/api/v1/auth/change/submit}">
+  <label for="emailInput">Email :</label>
+  <input type="email" name="emailInput" required th:field="${auth.email}" />
+  <label for="passwordInput">Old Password :</label>
+  <input type="password" name="passwordInput" required th:field="${auth.oldPassword}" />
+  <label for="passwordInput">New Password :</label>
+  <input type="password" name="passwordInput" required th:field="${auth.newPassword}" />
+  <button type="submit">Change Password</button>
+</form> -->

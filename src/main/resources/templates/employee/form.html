@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Form Employee</title>
+</head>
+<body>
+  <form method="POST" th:action="@{/api/v1/employees/submit}">
+    <input type="hidden" th:field="${employee.id}">
+    <div>
+      <label for="name">Name: </label>
+      <input type="text" th:field="${employee.name}" name="name">
+    </div>
+    <div>
+      <label for="email">Email: </label>
+      <input type="email" th:field="${employee.email}" name="email">
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</body>
+</html>

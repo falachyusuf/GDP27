@@ -3,18 +3,28 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Login</title>
   </head>
   <body>
-    <form method="POST" th:action="@{/api/v1/auth/login/submit}">
-      <label for="emailInput">Email :</label>
-      <input type="email" name="emailInput" required th:field="${loginData.email}" />
-      <label for="passwordInput">Password :</label>
-      <input type="password" name="passwordInput" required th:field="${loginData.password}" />
-      <button type="submit">Login</button>
-    </form>
-    <div th:if="${param.error}">
-      <p style="color: red">Email atau password salah. Silakan coba lagi.</p>
+    <div class="h-screen flex justify-center items-center bg-indigo-300">
+      <div class="w-3/12 p-5 bg-white rounded-md drop-shadow-2xl">
+        <h1 class="font-bold text-center">Login form</h1>
+        <form method="POST" th:action="@{/api/v1/auth/login/submit}" class="flex flex-col">
+          <label for="emailInput">Email :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="email" name="emailInput" required th:field="${loginData.email}" />
+          <label for="passwordInput">Password :</label>
+          <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="password" name="passwordInput" required th:field="${loginData.password}" />
+          <button type="submit" class="bg-indigo-500 px-3 py-2 rounded-md text-white">Login</button>
+        </form>
+        <div class="flex justify-between">
+          <a th:href="@{/api/v1/auth/register/form}" class="underline decoration-indigo-500">Register here!</a>
+          <a th:href="@{/api/v1/auth/forgotPassword}" class="underline decoration-indigo-500">Forgot Password</a>
+        </div>
+        <div th:if="${param.error}" class="mt-3 text-center">
+          <p style="color: red">Email atau password salah. Silakan coba lagi.</p>
+        </div>
+      </div>
     </div>
   </body>
 </html>

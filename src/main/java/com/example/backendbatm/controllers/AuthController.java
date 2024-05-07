@@ -96,37 +96,17 @@ public class AuthController {
         if (optional.isEmpty()) {
             return "redirect:form?error=true";
         }
-        
+
         if (!optional.get().getPassword().equals(password)) {
             return "redirect:form?error=true";
         }
-      
+
         LoginResponseDTO response = new LoginResponseDTO();
         response.setName(employee.getName());
-      
+
         model.addAttribute("responseLogin", response);
-          
+
         return "/user/index";
-    }
-
-    @GetMapping("forgot/form")
-    public String forgotForm(Model model){
-        return "/auth/forgot/form";
-    }
-
-    @PostMapping("forgot/submit")
-    public String forgotSubmit(ForgotDTO forgotDTO){
-        return "/auth/login/submit";
-    }
-
-    @GetMapping("change/form")
-    public String changeForm(Model model){
-        return "/auth/change/form";
-    }
-
-    @PostMapping("change/submit")
-    public String changeSubmit(ChangeDTO changeDTO){
-        return "/auth/change/submit";
     }
 
     @GetMapping("forgotPassword")
@@ -148,9 +128,9 @@ public class AuthController {
         if(newPassword != ""){
             employee.getUser().setPassword(newPassword);
             employeeRepository.save(employee);
-            return "redirect:/api/v1/auth";    
+            return "redirect:/api/v1/auth";
         }
         return "redirect:/api/v1/auth/forgotPassword";
-        
+
     };
 }

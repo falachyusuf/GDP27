@@ -37,7 +37,7 @@ public class AuthController {
 
     @GetMapping
     public String index() {
-        return "auth/index";
+        return "home/index";
     }
 
     @GetMapping("register/form")
@@ -109,7 +109,7 @@ public class AuthController {
 
         model.addAttribute("responseLogin", response);
 
-        return "/home/index";
+        return "redirect:/auth";
     }
 
     @GetMapping("forgotPassword")

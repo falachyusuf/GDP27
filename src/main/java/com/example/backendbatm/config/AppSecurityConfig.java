@@ -24,7 +24,7 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests((auth) -> {
                     try {
                         auth
-                                .antMatchers("/api/v1/auth/login/form").permitAll()
+                                .antMatchers("/auth/login/form").permitAll()
                                 .antMatchers("/auth/forgotPassword").permitAll()
                                 .antMatchers("/auth/resetPassword").permitAll()
                                 .antMatchers("/user/**").hasRole("Manager")
@@ -34,7 +34,7 @@ public class AppSecurityConfig {
                                 .anyRequest().permitAll()
                                 .and()
                                 .formLogin()
-                                .loginPage("/api/v1/auth/login/form")
+                                .loginPage("/auth/login/form")
                                 .and()
                                 .httpBasic()
                                 .and()

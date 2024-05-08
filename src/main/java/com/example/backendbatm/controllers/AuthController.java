@@ -152,8 +152,8 @@ public class AuthController {
 
         try {
             User user = userRepository.findById(employee.getId()).get();
-            if (oldPassword.equals(user.getPassword())) {
-                user.setPassword(newPassword);
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
                 return "redirect:/auth/login/form";
             } else {

@@ -6,7 +6,7 @@
     <title>Create New User</title>
 </head>
 <body>
-    <form th:action=@{/api/v1/user/save} method="POST">
+    <form th:action=@{/user/save} method="POST">
         <div>
             <label>ID</label>
             <input th:field="${user.id}" />

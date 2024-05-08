@@ -3,6 +3,7 @@ package com.example.backendbatm.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +23,7 @@ import com.example.backendbatm.repository.RoleRepository;
 import com.example.backendbatm.repository.UserRepository;
 
 @Controller
-@RequestMapping("/api/v1/auth")
+@RequestMapping("auth")
 public class AuthController {
 
     @Autowired
@@ -31,6 +32,8 @@ public class AuthController {
     private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public String index() {
@@ -111,7 +114,7 @@ public class AuthController {
 
     @GetMapping("forgotPassword")
     public String forgotPassword(Model model) {
-        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
+        model.addAttribute("forgotPasswordDTO", new ChangeDTO());
         return "auth/forgotPassword/form";
     }
 
@@ -122,15 +125,15 @@ public class AuthController {
 
         Employee employee = employeeRepository.findEmpByEmail(email);
         if (employee == null) {
-            return "redirect:/api/v1/auth/forgotPassword";
+            return "redirect:/auth/forgotPassword";
         }
 
         if (newPassword != "") {
-            employee.getUser().setPassword(newPassword);
+            employee.getUser().setPassword(passwordEncoder.encode(newPassword));
             employeeRepository.save(employee);
-            return "redirect:/api/v1/auth/login/form";
+            return "redirect:/auth/login/form";
         }
-        return "redirect:/api/v1/auth/login/form";
+        return "redirect:/auth/forgotPassword";
 
     };
 

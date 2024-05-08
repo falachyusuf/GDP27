@@ -9,7 +9,7 @@ import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.repository.EmployeeRepository;
 
 @Controller
-@RequestMapping("/api/v1/employees")
+@RequestMapping("/employee")
 public class EmployeeController {
 
   @Autowired
@@ -38,7 +38,7 @@ public class EmployeeController {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return "redirect:/api/v1/employees";
+    return "redirect:/employee";
   }
 
   @PostMapping("delete/{id}")
@@ -48,6 +48,6 @@ public class EmployeeController {
     } catch (Exception e) {
       e.printStackTrace();
     }
-    return "redirect:/api/v1/employees";
+    return "redirect:/employee";
   }
 }

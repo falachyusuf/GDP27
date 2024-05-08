@@ -10,12 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.backendbatm.repository.RegionRepository;
 import com.example.backendbatm.model.Region;
 
-import com.example.backendbatm.model.Region;
-import com.example.backendbatm.repository.RegionRepository;
 
 
 @Controller
-@RequestMapping("region")
+@RequestMapping("/region")
 public class RegionController {
     @Autowired
     RegionRepository regionRepository;

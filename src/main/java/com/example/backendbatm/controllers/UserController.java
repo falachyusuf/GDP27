@@ -13,7 +13,7 @@ import com.example.backendbatm.repository.RoleRepository;
 import com.example.backendbatm.repository.UserRepository;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
     @Autowired
     private UserRepository userRepository;
@@ -27,7 +27,7 @@ public class UserController {
         return "user/index";
     }
 
-    @GetMapping(value = {"form", "form/{id}"})
+    @GetMapping(value = {"/form", "form/{id}"})
     public String form(Model model, @PathVariable(required = false) Integer id){
         model.addAttribute("roles", roleRepository.findAll());
         if(id != null){

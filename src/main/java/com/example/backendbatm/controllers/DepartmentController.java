@@ -13,7 +13,7 @@ import com.example.backendbatm.repository.DepartmentRepository;
 import com.example.backendbatm.repository.RegionRepository;
 
 @Controller
-@RequestMapping("/api/v1/department")
+@RequestMapping("/department")
 public class DepartmentController {
     @Autowired
     private DepartmentRepository departmentRepository;
@@ -36,14 +36,20 @@ public class DepartmentController {
         model.addAttribute("regionOptions", regionRepository.findAll());
         return "department/form";
     }
-    
+
     @PostMapping("submit")
     private String submitDepartment(Department department){
         Department newDepartment = departmentRepository.save(department);
         if (newDepartment != null) {
-            return "redirect:/api/v1/department";
+            return "redirect:/department";
         }
         return "department/index";
+    }
+
+    @PostMapping("delete/{id}")
+    public String deleteUser(@PathVariable(required = true) Integer id) {
+        departmentRepository.deleteById(id);
+        return "redirect:/department";
     }
 
 }

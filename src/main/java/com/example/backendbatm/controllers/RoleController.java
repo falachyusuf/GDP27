@@ -12,7 +12,7 @@ import com.example.backendbatm.model.Role;
 import com.example.backendbatm.repository.RoleRepository;
 
 @Controller
-@RequestMapping("/api/v1/role")
+@RequestMapping("/role")
 public class RoleController {
     @Autowired
     private RoleRepository roleRepository;
@@ -44,7 +44,7 @@ public class RoleController {
     private String submitDepartment(Role role) {
         Role newRole = roleRepository.save(role);
         if (!newRole.equals(null)) {
-            return "redirect:/api/v1/role";
+            return "redirect:/role";
         }
         return "role/index";
     }
@@ -52,6 +52,6 @@ public class RoleController {
     @PostMapping("delete/{id}")
     public String deleteUser(@PathVariable(required = true) Integer id) {
         roleRepository.deleteById(id);
-        return "redirect:/api/v1/role";
+        return "redirect:/role";
     }
 }

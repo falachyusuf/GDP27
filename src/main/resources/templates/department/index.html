@@ -6,7 +6,7 @@
     <title>Departement</title>
   </head>
   <body>
-    <a th:href="@{/api/v1/department/form/post}"><button>Add Department</button></a>
+    <a th:href="@{/department/form/post}"><button>Add Department</button></a>
     <table border="1">
       <thead>
         <tr>
@@ -22,8 +22,8 @@
           <th th:text="${Department.name}"></th>
           <th th:text="${Department.region.name}"></th>
           <th>
-            <a th:href="@{/api/v1/department/form/edit/{id}(id=${Department.id})}"><button>Edit</button></a>
-            <form th:action="@{/api/v1/department/delete/{id}(id=${Department.id})}">
+            <a th:href="@{/department/form/edit/{id}(id=${Department.id})}"><button>Edit</button></a>
+            <form method="post" th:action="@{/department/delete/{id}(id=${Department.id})}">
               <button>Delete</button>
             </form>
           </th>

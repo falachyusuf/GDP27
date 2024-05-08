@@ -22,10 +22,10 @@
                 <td th:text="${role.id}"></td>
                 <td th:text="${role.name}"></td>
                 <td>
-                    <form method="POST" th:action="@{/api/v1/role/delete/{id}(id=${role.id})}">
+                    <form method="POST" th:action="@{/role/delete/{id}(id=${role.id})}">
                         <button type="submit">DELETE</button>
                     </form>
-                    <a th:href="@{/api/v1/role/form/edit/{id}(id=${role.id})}">EDIT</a>
+                    <a th:href="@{/role/form/edit/{id}(id=${role.id})}">EDIT</a>
                 </td>
             </tr>
         </tbody>

@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <br>
-<form th:action="@{/api/v1/department/submit}" method="post">
+<form th:action="@{/department/submit}" method="post">
     <input placeholder="Input department id here" type="hidden" th:field="${department.id}">
     <label for="department name">Department Name</label></br>
     <input placeholder="Input department name here" th:field="${department.name}"></br>

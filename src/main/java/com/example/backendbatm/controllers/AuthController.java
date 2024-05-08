@@ -22,7 +22,7 @@ import com.example.backendbatm.repository.RoleRepository;
 import com.example.backendbatm.repository.UserRepository;
 
 @Controller
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -53,7 +53,7 @@ public class AuthController {
         Role role = registerDTO.getRole();
         if (!password.equals(confPassword)) {
             System.out.println("Password not match");
-            return "redirect:/api/v1/auth/register/form";
+            return "redirect:/auth/register/form";
         }
 
         Employee employee = new Employee();
@@ -71,7 +71,7 @@ public class AuthController {
             userRepository.save(user);
         }
 
-        return "redirect:/api/v1/auth/login/form";
+        return "redirect:/auth/login/form";
     }
 
     @GetMapping("login/form")
@@ -122,15 +122,15 @@ public class AuthController {
 
         Employee employee = employeeRepository.findEmpByEmail(email);
         if (employee == null) {
-            return "redirect:/api/v1/auth/forgotPassword";
+            return "redirect:/auth/forgotPassword";
         }
 
         if (newPassword != "") {
             employee.getUser().setPassword(newPassword);
             employeeRepository.save(employee);
-            return "redirect:/api/v1/auth/login/form";
+            return "redirect:/auth/login/form";
         }
-        return "redirect:/api/v1/auth/login/form";
+        return "redirect:/auth/login/form";
 
     };
 
@@ -152,14 +152,14 @@ public class AuthController {
             if (oldPassword.equals(user.getPassword())) {
                 user.setPassword(newPassword);
                 userRepository.save(user);
-                return "redirect:/api/v1/auth/login/form";
+                return "redirect:/auth/login/form";
             } else {
-                return "redirect:/api/v1/auth/change/form";
+                return "redirect:/auth/change/form";
             }
         } catch (Exception e) {
             System.out.println("Employee not found");
             e.printStackTrace();
-            return "redirect:/api/v1/auth/change/form";
+            return "redirect:/auth/change/form";
         }
     }
 }

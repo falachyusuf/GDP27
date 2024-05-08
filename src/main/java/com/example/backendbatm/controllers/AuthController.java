@@ -3,6 +3,7 @@ package com.example.backendbatm.controllers;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +32,12 @@ public class AuthController {
     private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public String index() {
-        return "auth/index";
+        return "home/index";
     }
 
     @GetMapping("register/form")
@@ -106,12 +109,12 @@ public class AuthController {
 
         model.addAttribute("responseLogin", response);
 
-        return "/home/index";
+        return "redirect:/auth";
     }
 
     @GetMapping("forgotPassword")
     public String forgotPassword(Model model) {
-        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
+        model.addAttribute("forgotPasswordDTO", new ChangeDTO());
         return "auth/forgotPassword/form";
     }
 
@@ -126,11 +129,11 @@ public class AuthController {
         }
 
         if (newPassword != "") {
-            employee.getUser().setPassword(newPassword);
+            employee.getUser().setPassword(passwordEncoder.encode(newPassword));
             employeeRepository.save(employee);
             return "redirect:/auth/login/form";
         }
-        return "redirect:/auth/login/form";
+        return "redirect:/auth/forgotPassword";
 
     };
 

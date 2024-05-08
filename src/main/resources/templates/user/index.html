@@ -24,10 +24,10 @@
           <td th:text="${user.password}"></td>
           <td th:text="${user.role.name}"></td>
           <td>
-            <form method="POST" th:action="@{/users/delete/{id}(id=${user.id})}">
+            <form method="POST" th:action="@{/user/delete/{id}(id=${user.id})}">
               <button type="submit">DELETE</button>
             </form>
-            <a th:href="@{/users/form/{id}(id=${user.id})}">EDIT</a>
+            <a th:href="@{/user/form/{id}(id=${user.id})}"><button>EDIT</button></a>
           </td>
         </tr>
       </tbody>

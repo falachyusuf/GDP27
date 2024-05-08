@@ -10,7 +10,7 @@
     <div class="h-screen flex justify-center items-center bg-indigo-300">
       <div class="w-3/12 p-5 bg-white rounded-md drop-shadow-2xl">
         <h1 class="font-bold text-center">Register form</h1>
-        <form method="POST" th:action="@{/api/v1/auth/register/submit}" class="flex flex-col">
+        <form method="POST" th:action="@{/auth/register/submit}" class="flex flex-col">
           <label for="emailInput">Name :</label>
           <input class="border-solid border-2 border-indigo-500 rounded-md mb-3 p-2" type="text" name="nameInput" required th:field="${register.name}" />
           <label for="emailInput">Email :</label>

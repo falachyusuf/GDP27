@@ -1,12 +1,7 @@
 package com.example.backendbatm.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +20,7 @@ import com.example.backendbatm.repository.RoleRepository;
 import com.example.backendbatm.repository.UserRepository;
 
 @Controller
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 public class AuthController {
 
     @Autowired
@@ -36,10 +31,12 @@ public class AuthController {
     private EmployeeRepository employeeRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @GetMapping
     public String index() {
-        return "auth/index";
+        return "home/index";
     }
 
     @GetMapping("register/form")
@@ -58,7 +55,7 @@ public class AuthController {
         Role role = registerDTO.getRole();
         if (!password.equals(confPassword)) {
             System.out.println("Password not match");
-            return "redirect:/api/v1/auth/register/form";
+            return "redirect:/auth/register/form";
         }
 
         Employee employee = new Employee();
@@ -71,12 +68,12 @@ public class AuthController {
         } else {
             User user = new User();
             user.setId(employeeSaved.getId());
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
             user.setRole(role);
             userRepository.save(user);
         }
 
-        return "redirect:/api/v1/auth/login/form";
+        return "redirect:/auth/login/form";
     }
 
     @GetMapping("login/form")
@@ -100,7 +97,7 @@ public class AuthController {
 
     @GetMapping("forgotPassword")
     public String forgotPassword(Model model) {
-        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
+        model.addAttribute("forgotPasswordDTO", new ChangeDTO());
         return "auth/forgotPassword/form";
     }
 
@@ -111,15 +108,15 @@ public class AuthController {
 
         Employee employee = employeeRepository.findEmpByEmail(email);
         if (employee == null) {
-            return "redirect:/api/v1/auth/forgotPassword";
+            return "redirect:/auth/forgotPassword";
         }
 
         if (newPassword != "") {
-            employee.getUser().setPassword(newPassword);
+            employee.getUser().setPassword(passwordEncoder.encode(newPassword));
             employeeRepository.save(employee);
-            return "redirect:/api/v1/auth/login/form";
+            return "redirect:/auth/login/form";
         }
-        return "redirect:/api/v1/auth/login/form";
+        return "redirect:/auth/forgotPassword";
 
     };
 
@@ -138,17 +135,17 @@ public class AuthController {
 
         try {
             User user = userRepository.findById(employee.getId()).get();
-            if (oldPassword.equals(user.getPassword())) {
-                user.setPassword(newPassword);
+            if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                user.setPassword(passwordEncoder.encode(newPassword));
                 userRepository.save(user);
-                return "redirect:/api/v1/auth/login/form";
+                return "redirect:/auth/login/form";
             } else {
-                return "redirect:/api/v1/auth/change/form";
+                return "redirect:/auth/change/form";
             }
         } catch (Exception e) {
             System.out.println("Employee not found");
             e.printStackTrace();
-            return "redirect:/api/v1/auth/change/form";
+            return "redirect:/auth/change/form";
         }
     }
 }

@@ -69,7 +69,7 @@ public class AuthController {
         } else {
             User user = new User();
             user.setId(employeeSaved.getId());
-            user.setPassword(password);
+            user.setPassword(passwordEncoder.encode(password));
             user.setRole(role);
             userRepository.save(user);
         }

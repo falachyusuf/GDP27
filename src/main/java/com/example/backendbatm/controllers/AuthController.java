@@ -1,8 +1,12 @@
 package com.example.backendbatm.controllers;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.backendbatm.DTO.ChangeDTO;
-import com.example.backendbatm.DTO.LoginResponseDTO;
 import com.example.backendbatm.DTO.ForgotDTO;
 import com.example.backendbatm.DTO.LoginDTO;
 import com.example.backendbatm.DTO.RegisterDTO;
@@ -25,6 +28,8 @@ import com.example.backendbatm.repository.UserRepository;
 @RequestMapping("/api/v1/auth")
 public class AuthController {
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
@@ -81,32 +86,16 @@ public class AuthController {
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(LoginDTO loginDTO, Model model) {
-        String email = loginDTO.getEmail();
-        String password = loginDTO.getPassword();
-
-        Employee employee = employeeRepository.findEmpByEmail(email);
-
-        if (employee == null) {
-            return "redirect:form?error=true";
+    public String loginSubmit(LoginDTO login, Model model) throws Exception{
+        try {
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return "/home/index";
+        } catch (DisabledException e) {
+            throw new Exception("USER_DISABLED", e);
+        } catch (BadCredentialsException e) {
+            throw new Exception("INVALID_CREDENTIALS", e);
         }
-
-        Optional<User> optional = userRepository.findById(employee.getId());
-
-        if (optional.isEmpty()) {
-            return "redirect:form?error=true";
-        }
-
-        if (!optional.get().getPassword().equals(password)) {
-            return "redirect:form?error=true";
-        }
-
-        LoginResponseDTO response = new LoginResponseDTO();
-        response.setName(employee.getName());
-
-        model.addAttribute("responseLogin", response);
-
-        return "/user/index";
     }
 
     @GetMapping("forgotPassword")

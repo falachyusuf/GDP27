@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backendbatm.DTO.LoginDTO;
-import com.example.backendbatm.DTO.RegisterDTO;
+import com.example.backendbatm.DTO.RegisterRestDTO;
 import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
@@ -36,7 +36,7 @@ public class AuthRestController {
   private PasswordEncoder passwordEncoder;
 
   @PostMapping("auth/register")
-  public boolean register(@RequestBody RegisterDTO register){
+  public boolean register(@RequestBody RegisterRestDTO register){
     String name = register.getName();
     String email = register.getEmail();
     String password = register.getPassword();

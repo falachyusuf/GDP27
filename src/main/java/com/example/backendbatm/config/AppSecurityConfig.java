@@ -24,19 +24,11 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests((auth) -> {
                     try {
                         auth
-                                .antMatchers("/auth/login/form").permitAll()
-                                .antMatchers("/auth/forgotPassword").permitAll()
-                                .antMatchers("/auth/resetPassword").permitAll()
-                                .antMatchers("/auth/change/form").authenticated()
-                                .antMatchers("/auth/change/submit").authenticated()
-                                .antMatchers("/user/**").hasRole("Manager")
-                                .antMatchers("/region/**").hasRole("Manager")
+                                .antMatchers("/auth/login/form", "/auth/forgotPassword", "/auth/resetPassword").permitAll()
+                                .antMatchers("/auth/change/form", "/auth/change/submit").authenticated()
+                                .antMatchers("/user/**", "/region/**").hasRole("Manager")
                                 .antMatchers("/bot/**").hasAnyRole("Manager", "Admin")
                                 .antMatchers("/category/**").authenticated()
-                                .anyRequest().permitAll()
-                                .and()
-                                .formLogin()
-                                .loginPage("/auth/login/form")
                                 .and()
                                 .httpBasic()
                                 .and()

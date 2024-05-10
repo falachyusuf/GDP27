@@ -103,7 +103,7 @@ public class AuthController {
 
     @GetMapping("forgotPassword")
     public String forgotPassword(Model model) {
-        model.addAttribute("forgotPasswordDTO", new ChangeDTO());
+        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
         return "auth/forgotPassword/form";
     }
 

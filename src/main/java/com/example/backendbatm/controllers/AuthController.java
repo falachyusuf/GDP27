@@ -53,7 +53,7 @@ public class AuthController {
     }
 
     @PostMapping("register/submit")
-    private String registerSubmit(Model model, RegisterDTO registerDTO) {
+    private String registerSubmit(RegisterDTO registerDTO) {
         String name = registerDTO.getName();
         String email = registerDTO.getEmail();
         String password = registerDTO.getPassword();

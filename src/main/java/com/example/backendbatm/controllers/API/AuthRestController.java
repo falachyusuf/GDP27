@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backendbatm.DTO.LoginDTO;
+import com.example.backendbatm.DTO.RegisterDTO;
 import com.example.backendbatm.model.Employee;
+import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
 import com.example.backendbatm.repository.EmployeeRepository;
 import com.example.backendbatm.repository.UserRepository;
@@ -21,13 +23,40 @@ public class AuthRestController {
 
   @Autowired
   private EmployeeRepository employeeRepository;
-  
+
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
- 
+
+  @PostMapping("auth/register")
+  public boolean register(@RequestBody RegisterDTO register){
+    String name = register.getName();
+    String email = register.getEmail();
+    String password = register.getPassword();
+    String confPassword = register.getConfPassword();
+    Role role = register.getRole();
+    if(!password.equals(confPassword)){
+      return false;
+    }
+    Employee employee = new Employee();
+    employee.setName(name);
+    employee.setEmail(email);
+    Employee employeeSaved = employeeRepository.save(employee);
+    if(employeeSaved == null){
+      return false;
+    } else {
+      User user = new User();
+      user.setId(employeeSaved.getId());
+      user.setPassword(passwordEncoder.encode(password));
+      user.setRole(role);
+      userRepository.save(user);
+    }
+    return userRepository.findById(employeeSaved.getId()).isPresent();
+  }
+
+
   @PostMapping("auth/login")
   public boolean login(@RequestBody LoginDTO login) {
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
@@ -47,7 +76,7 @@ public class AuthRestController {
     if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
       return false;
     }
-    
+
     return true;
   }
 }

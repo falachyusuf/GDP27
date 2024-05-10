@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -86,5 +87,23 @@ public class AuthRestController {
     }
 
     return true;
+  }
+
+  @PutMapping("auth/forgot-password")
+  public boolean forgotPassword(@RequestBody LoginDTO login) {
+    String newPassword = login.getPassword();
+    Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
+
+    if(employee == null){
+      return false;
+    }
+
+    if(newPassword != ""){
+      employee.getUser().setPassword(passwordEncoder.encode(newPassword));
+      employeeRepository.save(employee);
+      return true;
+    }
+
+    return false;
   }
 }

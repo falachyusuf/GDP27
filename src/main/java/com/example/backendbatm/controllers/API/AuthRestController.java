@@ -15,11 +15,15 @@ import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
 import com.example.backendbatm.repository.EmployeeRepository;
+import com.example.backendbatm.repository.RoleRepository;
 import com.example.backendbatm.repository.UserRepository;
 
 @RestController
 @RequestMapping("api")
 public class AuthRestController {
+
+  @Autowired
+  private RoleRepository roleRepository;
 
   @Autowired
   private EmployeeRepository employeeRepository;
@@ -36,8 +40,12 @@ public class AuthRestController {
     String email = register.getEmail();
     String password = register.getPassword();
     String confPassword = register.getConfPassword();
-    Role role = register.getRole();
+    Integer roleId = register.getRoleId();
     if(!password.equals(confPassword)){
+      return false;
+    }
+    Role role = roleRepository.findById(roleId).orElse(null);
+    if(role == null){
       return false;
     }
     Employee employee = new Employee();

@@ -7,16 +7,17 @@ public class RegisterDTO {
     private String email;
     private String password;
     private String confPassword;
-    private Role role;
+    private Integer roleId;
 
     public RegisterDTO() {
     }
 
-    public RegisterDTO(String name, String email, String password, String confPassword) {
+    public RegisterDTO(String name, String email, String password, String confPassword, Integer roleId) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.confPassword = confPassword;
+        this.roleId = roleId;
     }
 
     public String getName() {
@@ -51,13 +52,15 @@ public class RegisterDTO {
         this.confPassword = confPassword;
     }
 
-    public Role getRole() {
-        return role;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
+
+    
 
 
 }

@@ -18,27 +18,27 @@ import com.example.backendbatm.repository.RoleRepository;
 
 @RestController
 @RequestMapping("api")
-public class RoleRest {
+public class RoleRestController {
     @Autowired
     private RoleRepository roleRepository;
 
-    @GetMapping("role")
+    @GetMapping("roles")
     public List<Role> get(){
         return roleRepository.findAll();
     }
 
-    @GetMapping("role/{id}")
+    @GetMapping("roles/{id}")
     public Role getRoleById(@PathVariable(required = true) Integer id){
         return roleRepository.findById(id).orElse(null);
     }
 
-    @PostMapping("role")
+    @PostMapping("roles")
     public boolean postRole(@RequestBody Role role){
         Role result = roleRepository.save(role);
         return roleRepository.findById(result.getId()).isPresent();
     }
 
-    @DeleteMapping("role/{id}")
+    @DeleteMapping("roles/{id}")
     public boolean deleteRole(@PathVariable(required = true) Integer id){
         roleRepository.deleteById(id);
         return roleRepository.findById(id).isEmpty();

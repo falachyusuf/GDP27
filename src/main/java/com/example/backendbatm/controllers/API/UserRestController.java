@@ -15,29 +15,29 @@ import com.example.backendbatm.model.User;
 import com.example.backendbatm.repository.UserRepository;
 
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("api")
 public class UserRestController {
 
   @Autowired
   private UserRepository userRepository;
 
-  @GetMapping
+  @GetMapping("users")
   public List<User> get() {
     return userRepository.findAll();
   }
 
-  @GetMapping("/{id}")
+  @GetMapping("users/{id}")
   public User get(@PathVariable(required = true) Integer id) {
     return userRepository.findById(id).orElse(null);
   }
 
-  @PostMapping
+  @PostMapping("users")
   public boolean save(@RequestBody User user) {
     User result = userRepository.save(user);
     return userRepository.findById(result.getId()).isPresent();
   }
 
-  @DeleteMapping("/{id}")
+  @DeleteMapping("users/{id}")
   public boolean delete(@PathVariable(required=true) Integer id) {
     userRepository.deleteById(id);
     return userRepository.findById(id).isEmpty();

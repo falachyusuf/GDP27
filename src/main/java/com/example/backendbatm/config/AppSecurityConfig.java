@@ -24,11 +24,20 @@ public class AppSecurityConfig {
                 .authorizeHttpRequests((auth) -> {
                     try {
                         auth
+                                .antMatchers("/api/**").permitAll()
                                 .antMatchers("/auth/login/form", "/auth/forgotPassword", "/auth/resetPassword").permitAll()
                                 .antMatchers("/auth/change/form", "/auth/change/submit").authenticated()
                                 .antMatchers("/user/**", "/region/**").hasRole("Manager")
                                 .antMatchers("/bot/**").hasAnyRole("Manager", "Admin")
                                 .antMatchers("/category/**").authenticated()
+                                .anyRequest().permitAll()
+                                .and()
+                                .formLogin()
+                                .loginPage("/auth/login/form")
+                                .usernameParameter("email")
+                                .loginProcessingUrl("/auth/login/submit")
+                                .failureUrl("/auth/login/form?error=true")
+                                .defaultSuccessUrl("/auth/")
                                 .and()
                                 .httpBasic()
                                 .and()

@@ -42,7 +42,7 @@ public class MyUserDetails implements UserDetails, UserDetailsService{
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.loginNext(username);
+        return userRepository.login(username);
     }
 
     @Override
@@ -74,5 +74,4 @@ public class MyUserDetails implements UserDetails, UserDetailsService{
     public boolean isEnabled() {
         return true;
     }
-   
 }

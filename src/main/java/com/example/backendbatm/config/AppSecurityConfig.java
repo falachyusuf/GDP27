@@ -11,11 +11,11 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class AppSecurityConfig {
-    @Bean // Authentication
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-            throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
-    }
+  @Bean // Authentication
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+      throws Exception {
+    return authenticationConfiguration.getAuthenticationManager();
+  }
 
     @Bean // Authorization
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -40,8 +40,8 @@ public class AppSecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 }

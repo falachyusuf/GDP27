@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.repository.RoleRepository;
@@ -42,5 +42,21 @@ public class RoleRestController {
     public boolean deleteRole(@PathVariable(required = true) Integer id){
         roleRepository.deleteById(id);
         return roleRepository.findById(id).isEmpty();
+    }
+
+    @PutMapping("role/{id}")
+    public boolean edit(@PathVariable(required = true) Integer id, @RequestBody Role role) {
+        Role roleData = roleRepository.findById(id).orElse(null);
+
+        if(roleData == null){
+            return false;
+        }
+
+        if(role.getName() != null && !role.getName().equals("")){
+            roleData.setName(role.getName());
+        }
+
+        roleRepository.save(roleData);
+        return true;
     }
 }

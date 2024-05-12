@@ -25,9 +25,9 @@ public class AppSecurityConfig {
           try {
             auth
                 .antMatchers("/api/**").permitAll()
-                .antMatchers("/auth/login/form", "/auth/forgotPassword", "/auth/resetPassword").permitAll()
+                .antMatchers("/auth/login/form", "/auth/forgot-password/form", "/auth/forgot-password/submit").permitAll()
                 .antMatchers("/auth/change/form", "/auth/change/submit").authenticated()
-                .antMatchers("/user/**", "/region/**").hasRole("Manager")
+                .antMatchers("/user/**", "/region/**").authenticated()
                 .antMatchers("/bot/**").hasAnyRole("Manager", "Admin")
                 .antMatchers("/category/**").authenticated()
                 .anyRequest().permitAll()

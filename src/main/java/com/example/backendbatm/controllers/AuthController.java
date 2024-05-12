@@ -101,20 +101,20 @@ public class AuthController {
         }
     }
 
-    @GetMapping("forgotPassword")
+    @GetMapping("forgot-password/form")
     public String forgotPassword(Model model) {
         model.addAttribute("forgotPasswordDTO", new ForgotDTO());
-        return "auth/forgotPassword/form";
+        return "auth/forgot-password/form";
     }
 
-    @PostMapping("resetPassword")
-    public String resetPassword(ForgotDTO forgotpassData) {
-        String email = forgotpassData.getEmail();
-        String newPassword = forgotpassData.getNewPassword();
+    @PostMapping("forgot-password/submit")
+    public String resetPassword(ForgotDTO forgotPassData) {
+        String email = forgotPassData.getEmail();
+        String newPassword = forgotPassData.getNewPassword();
 
         Employee employee = employeeRepository.findEmpByEmail(email);
         if (employee == null) {
-            return "redirect:/auth/forgotPassword";
+            return "redirect:/auth/forgot-password/form";
         }
 
         if (newPassword != "") {
@@ -122,7 +122,7 @@ public class AuthController {
             employeeRepository.save(employee);
             return "redirect:/auth/login/form";
         }
-        return "redirect:/auth/forgotPassword";
+        return "redirect:/auth/forgot-password/form";
 
     };
 

@@ -33,19 +33,19 @@ public class RoleRestController {
     }
 
     @PostMapping("roles")
-    public boolean postRole(@RequestBody Role role){
+    public boolean save(@RequestBody Role role){
         Role result = roleRepository.save(role);
         return roleRepository.findById(result.getId()).isPresent();
     }
 
     @DeleteMapping("roles/{id}")
-    public boolean deleteRole(@PathVariable(required = true) Integer id){
+    public boolean deleteById(@PathVariable(required = true) Integer id){
         roleRepository.deleteById(id);
         return roleRepository.findById(id).isEmpty();
     }
 
     @PutMapping("role/{id}")
-    public boolean edit(@PathVariable(required = true) Integer id, @RequestBody Role role) {
+    public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody Role role) {
         Role roleData = roleRepository.findById(id).orElse(null);
 
         if(roleData == null){

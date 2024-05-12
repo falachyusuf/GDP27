@@ -2,14 +2,14 @@ package com.example.backendbatm.DTO;
 
 public class UserRequestDTO {
   private String password;
-  private Integer role_id;
+  private Integer roleId;
 
   public UserRequestDTO() {
   }
 
-  public UserRequestDTO(String password, Integer role_id) {
+  public UserRequestDTO(String password, Integer roleId) {
     this.password = password;
-    this.role_id = role_id;
+    this.roleId = roleId;
   }
 
   public String getPassword() {
@@ -20,11 +20,11 @@ public class UserRequestDTO {
     this.password = password;
   }
 
-  public Integer getRole_id() {
-    return role_id;
+  public Integer getRoleId() {
+    return roleId;
   }
 
-  public void setRole_id(Integer role_id) {
-    this.role_id = role_id;
+  public void setRoleId(Integer roleId) {
+    this.roleId = roleId;
   }
 }

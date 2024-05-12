@@ -24,7 +24,7 @@ public class RoleController {
     }
 
     @GetMapping("/form")
-    public String create(Model model) {
+    public String createRole(Model model) {
         model.addAttribute("role", new Role());
         return "role/form";
     }

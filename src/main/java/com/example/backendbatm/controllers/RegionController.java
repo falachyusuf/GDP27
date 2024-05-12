@@ -46,7 +46,7 @@ public class RegionController {
     }
 
     @PostMapping("delete/{id}")
-    public String delete(@PathVariable(required = true) Integer id){
+    public String deleteRegion(@PathVariable(required = true) Integer id){
         regionRepository.deleteById(id);
         Boolean isDeleted = regionRepository.findById(id).isEmpty();
         if(isDeleted){

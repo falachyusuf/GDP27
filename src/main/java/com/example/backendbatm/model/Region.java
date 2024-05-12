@@ -17,7 +17,6 @@ public class Region {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
-
     String name;
 
     @JsonIgnore

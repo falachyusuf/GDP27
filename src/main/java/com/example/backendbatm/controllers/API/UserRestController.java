@@ -25,20 +25,20 @@ public class UserRestController {
 
   @Autowired
   private UserRepository userRepository;
-  
+
   @Autowired
   private RoleRepository roleRepository;
-  
+
   @Autowired
   private PasswordEncoder passwordEncoder;
 
   @GetMapping("users")
-  public List<User> get() {
+  public List<User> getAll() {
     return userRepository.findAll();
   }
 
   @GetMapping("users/{id}")
-  public User get(@PathVariable(required = true) Integer id) {
+  public User getById(@PathVariable(required = true) Integer id) {
     return userRepository.findById(id).orElse(null);
   }
 
@@ -49,15 +49,15 @@ public class UserRestController {
   }
 
   @PutMapping("users/{id}")
-  public boolean edit(@PathVariable(required = true) Integer id, @RequestBody UserRequestDTO editData) {
+  public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody UserRequestDTO editData) {
     User userData = userRepository.findById(id).orElse(null);
-    
+
     if (userData == null) {
       return false;
     }
 
-    if (editData.getRole_id() != null) {
-      Role role = roleRepository.findById(editData.getRole_id()).get();
+    if (editData.getRoleId() != null) {
+      Role role = roleRepository.findById(editData.getRoleId()).get();
 
       if (role == null) {
         return false;
@@ -77,7 +77,7 @@ public class UserRestController {
   }
 
   @DeleteMapping("users/{id}")
-  public boolean delete(@PathVariable(required=true) Integer id) {
+  public boolean deleteById(@PathVariable(required=true) Integer id) {
     userRepository.deleteById(id);
     return userRepository.findById(id).isEmpty();
   }

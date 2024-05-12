@@ -22,12 +22,12 @@ public class EmployeeRestController {
     private EmployeeRepository employeeRepository;
 
     @GetMapping("employee")
-    public List<Employee> get() {
+    public List<Employee> getAll() {
         return employeeRepository.findAll();
     }
 
     @GetMapping("employee/{id}")
-    public Employee get(@PathVariable(required = true) Integer id) {
+    public Employee getById(@PathVariable(required = true) Integer id) {
         return employeeRepository.findById(id).orElse(null);
     }
 
@@ -38,13 +38,13 @@ public class EmployeeRestController {
     }
 
     @DeleteMapping("employee/{id}")
-    public boolean delete(@PathVariable(required = true) Integer id) {
+    public boolean deleteById(@PathVariable(required = true) Integer id) {
         employeeRepository.deleteById(id);
         return employeeRepository.findById(id).isEmpty();
     }
 
     @PutMapping("employee/{id}")
-    public boolean edit(@PathVariable(required = true) Integer id, @RequestBody Employee employee) {
+    public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody Employee employee) {
         Employee employeeData = employeeRepository.findById(id).orElse(null);
 
         if(employeeData == null){

@@ -32,7 +32,7 @@ public class EmployeeController {
   }
 
   @PostMapping("submit")
-  public String insert(Employee employee) {
+  public String insertEmployee(Employee employee) {
     try {
       employeeRepository.save(employee);
     } catch (Exception e) {
@@ -42,7 +42,7 @@ public class EmployeeController {
   }
 
   @PostMapping("delete/{id}")
-  public String delete(@PathVariable("id") Integer id) {
+  public String deleteEmployee(@PathVariable("id") Integer id) {
     try {
       employeeRepository.deleteById(id);
     } catch (Exception e) {

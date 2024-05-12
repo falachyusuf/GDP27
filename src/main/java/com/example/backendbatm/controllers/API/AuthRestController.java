@@ -45,6 +45,10 @@ public class AuthRestController {
     String password = register.getPassword();
     String confPassword = register.getConfPassword();
     Integer roleId = register.getRoleId();
+    Employee employeeExist = employeeRepository.findEmpByEmail(email);
+        if (employeeExist != null) {
+            return false;
+        }
     if(!password.equals(confPassword)){
       return false;
     }

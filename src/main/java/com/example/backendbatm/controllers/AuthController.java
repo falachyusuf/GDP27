@@ -59,6 +59,11 @@ public class AuthController {
         String password = registerDTO.getPassword();
         String confPassword = registerDTO.getConfPassword();
         Role role = registerDTO.getRole();
+        Employee employeeExist = employeeRepository.findEmpByEmail(email);
+        if (employeeExist != null) {
+            System.out.println("Employee already exist");
+            return "redirect:/auth/register/form";
+        }
         if (!password.equals(confPassword)) {
             System.out.println("Password not match");
             return "redirect:/auth/register/form";

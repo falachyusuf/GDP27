@@ -108,11 +108,11 @@ public class AuthRestController {
       userById = userRepository.findById(employeeByEmail.getId()).orElse(null);
     } catch (Exception e) {
       e.printStackTrace();
-      return CustomResponse.generate(HttpStatus.NOT_FOUND, "Email doesn't exist");
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email doesn't exist");
     }
 
     if (!passwordEncoder.matches(oldPassword, userById.getPassword())) {
-      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Old password and user password is not matches");
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Old password is invalid");
     }
 
     userById.setPassword(passwordEncoder.encode(newPassword));
@@ -133,6 +133,7 @@ public class AuthRestController {
       employee.getUser().setPassword(passwordEncoder.encode(newPassword));
       employeeRepository.save(employee);
       return CustomResponse.generate(HttpStatus.OK, "Data Successfully Updated");
-    } else return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Empty Password Field");
+    } else
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Empty Password Field");
   }
 }

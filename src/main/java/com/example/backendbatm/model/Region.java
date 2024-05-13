@@ -9,6 +9,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_m_region")
 public class Region {
@@ -16,6 +18,8 @@ public class Region {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
     String name;
+
+    @JsonIgnore
     @OneToMany(mappedBy = "region")
     private List<Department> departments;
 
@@ -51,6 +55,4 @@ public class Region {
     public void setDepartments(List<Department> departments) {
         this.departments = departments;
     }
-
-
 }

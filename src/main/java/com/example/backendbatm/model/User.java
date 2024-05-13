@@ -7,6 +7,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_m_user")
 public class User {
@@ -15,9 +17,11 @@ public class User {
     String password;
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonIgnore
     private Role role;
     @OneToOne
     @JoinColumn(name = "id")
+    @JsonIgnore
     private Employee employee;
 
     public User() {

@@ -1,22 +1,21 @@
 package com.example.backendbatm.DTO;
 
-import com.example.backendbatm.model.Role;
-
-public class RegisterDTO {
+public class RegisterRestDTO {
     private String name;
     private String email;
     private String password;
     private String confPassword;
-    private Role role;
+    private Integer roleId;
 
-    public RegisterDTO() {
+    public RegisterRestDTO() {
     }
 
-    public RegisterDTO(String name, String email, String password, String confPassword) {
+    public RegisterRestDTO(String name, String email, String password, String confPassword, Integer roleId) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.confPassword = confPassword;
+        this.roleId = roleId;
     }
 
     public String getName() {
@@ -51,12 +50,12 @@ public class RegisterDTO {
         this.confPassword = confPassword;
     }
 
-    public Role getRole() {
-        return role;
+    public Integer getRoleId() {
+        return roleId;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
 }

@@ -53,12 +53,17 @@ public class AuthController {
     }
 
     @PostMapping("register/submit")
-    private String registerSubmit(Model model, RegisterDTO registerDTO) {
+    private String registerSubmit(RegisterDTO registerDTO) {
         String name = registerDTO.getName();
         String email = registerDTO.getEmail();
         String password = registerDTO.getPassword();
         String confPassword = registerDTO.getConfPassword();
         Role role = registerDTO.getRole();
+        Employee employeeExist = employeeRepository.findEmpByEmail(email);
+        if (employeeExist != null) {
+            System.out.println("Employee already exist");
+            return "redirect:/auth/register/form";
+        }
         if (!password.equals(confPassword)) {
             System.out.println("Password not match");
             return "redirect:/auth/register/form";
@@ -89,9 +94,10 @@ public class AuthController {
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(LoginDTO login, Model model) throws Exception{
+    public String loginSubmit(LoginDTO login, Model model) throws Exception {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return "/home/index";
         } catch (DisabledException e) {
@@ -101,20 +107,20 @@ public class AuthController {
         }
     }
 
-    @GetMapping("forgotPassword")
+    @GetMapping("forgot-password/form")
     public String forgotPassword(Model model) {
-        model.addAttribute("forgotPasswordDTO", new ChangeDTO());
-        return "auth/forgotPassword/form";
+        model.addAttribute("forgotPasswordDTO", new ForgotDTO());
+        return "auth/forgot-password/form";
     }
 
-    @PostMapping("resetPassword")
-    public String resetPassword(ForgotDTO forgotpassData) {
-        String email = forgotpassData.getEmail();
-        String newPassword = forgotpassData.getNewPassword();
+    @PostMapping("forgot-password/submit")
+    public String resetPassword(ForgotDTO forgotPassData) {
+        String email = forgotPassData.getEmail();
+        String newPassword = forgotPassData.getNewPassword();
 
         Employee employee = employeeRepository.findEmpByEmail(email);
         if (employee == null) {
-            return "redirect:/auth/forgotPassword";
+            return "redirect:/auth/forgot-password/form";
         }
 
         if (newPassword != "") {
@@ -122,7 +128,7 @@ public class AuthController {
             employeeRepository.save(employee);
             return "redirect:/auth/login/form";
         }
-        return "redirect:/auth/forgotPassword";
+        return "redirect:/auth/forgot-password/form";
 
     };
 

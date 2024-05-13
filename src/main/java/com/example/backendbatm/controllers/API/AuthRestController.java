@@ -3,6 +3,8 @@ package com.example.backendbatm.controllers.API;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backendbatm.DTO.ChangeDTO;
 import com.example.backendbatm.DTO.LoginDTO;
 import com.example.backendbatm.DTO.RegisterRestDTO;
+import com.example.backendbatm.handler.CustomResponse;
 import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
@@ -109,20 +112,18 @@ public class AuthRestController {
   }
 
   @PutMapping("auth/forgot-password")
-  public boolean forgotPassword(@RequestBody LoginDTO login) {
+  public ResponseEntity<Object> forgotPassword(@RequestBody LoginDTO login) {
     String newPassword = login.getPassword();
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
 
     if (employee == null) {
-      return false;
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Data Not Found");
     }
 
     if (newPassword != "") {
       employee.getUser().setPassword(passwordEncoder.encode(newPassword));
       employeeRepository.save(employee);
-      return true;
-    }
-
-    return false;
+      return CustomResponse.generate(HttpStatus.OK, "Data Successfully Updated");
+    } else return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Empty Password Field");
   }
 }

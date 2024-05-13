@@ -21,7 +21,7 @@ public class EmployeeController {
     return "employee/index";
   }
 
-  @GetMapping(value = {"form", "form/{id}"})
+  @GetMapping(value = { "form", "form/{id}" })
   public String form(@PathVariable(required = false) Integer id, Model model) {
     if (id != null) {
       model.addAttribute("employee", employeeRepository.findById(id).get());

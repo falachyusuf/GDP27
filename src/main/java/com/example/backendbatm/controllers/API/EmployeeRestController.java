@@ -47,7 +47,7 @@ public class EmployeeRestController {
     public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody Employee employee) {
         Employee employeeData = employeeRepository.findById(id).orElse(null);
 
-        if(employeeData == null){
+        if (employeeData == null) {
             return false;
         }
 
@@ -55,7 +55,7 @@ public class EmployeeRestController {
             employeeData.setEmail(employee.getEmail());
         }
 
-        if(employee.getName() != null && !employee.getName().equals("")){
+        if (employee.getName() != null && !employee.getName().equals("")) {
             employeeData.setName(employee.getName());
         }
 

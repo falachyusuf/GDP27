@@ -77,7 +77,7 @@ public class UserRestController {
   }
 
   @DeleteMapping("users/{id}")
-  public boolean deleteById(@PathVariable(required=true) Integer id) {
+  public boolean deleteById(@PathVariable(required = true) Integer id) {
     userRepository.deleteById(id);
     return userRepository.findById(id).isEmpty();
   }

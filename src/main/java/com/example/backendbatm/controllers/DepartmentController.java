@@ -26,11 +26,12 @@ public class DepartmentController {
         model.addAttribute("departments", departmentRepository.findAll());
         return "department/index";
     }
-    @GetMapping(value = {"form/post", "form/edit/{id}"})
-    private String addDepartment(Model model, @PathVariable(required = false) Integer id){
-        if(id != null){
+
+    @GetMapping(value = { "form/post", "form/edit/{id}" })
+    private String addDepartment(Model model, @PathVariable(required = false) Integer id) {
+        if (id != null) {
             model.addAttribute("department", departmentRepository.findById(id));
-        }else{
+        } else {
             model.addAttribute("department", new Department());
         }
         model.addAttribute("regionOptions", regionRepository.findAll());
@@ -38,7 +39,7 @@ public class DepartmentController {
     }
 
     @PostMapping("submit")
-    private String submitDepartment(Department department){
+    private String submitDepartment(Department department) {
         Department newDepartment = departmentRepository.save(department);
         if (newDepartment != null) {
             return "redirect:/department";

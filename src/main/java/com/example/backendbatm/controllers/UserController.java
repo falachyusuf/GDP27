@@ -21,32 +21,32 @@ public class UserController {
     @Autowired
     private RoleRepository roleRepository;
 
-     @GetMapping
-    public String index(Model model){
+    @GetMapping
+    public String index(Model model) {
         model.addAttribute("users", userRepository.findAll());
         return "user/index";
     }
 
-    @GetMapping(value = {"/form", "form/{id}"})
-    public String form(Model model, @PathVariable(required = false) Integer id){
+    @GetMapping(value = { "/form", "form/{id}" })
+    public String form(Model model, @PathVariable(required = false) Integer id) {
         model.addAttribute("roles", roleRepository.findAll());
-        if(id != null){
+        if (id != null) {
             model.addAttribute("user", userRepository.findById(id));
-        }else{
+        } else {
             model.addAttribute("user", new User());
         }
         return "user/form";
     }
 
     @PostMapping("save")
-    public String form(User user){
+    public String form(User user) {
         userRepository.save(user);
         return "redirect:/user";
     }
 
     @PostMapping("delete/{id}")
-	public String deleteUser(@PathVariable(required = true) Integer id) {
-		userRepository.deleteById(id);
-		return "redirect:/user";
-	}
+    public String deleteUser(@PathVariable(required = true) Integer id) {
+        userRepository.deleteById(id);
+        return "redirect:/user";
+    }
 }

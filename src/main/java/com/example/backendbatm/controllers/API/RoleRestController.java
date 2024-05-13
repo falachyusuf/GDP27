@@ -1,6 +1,5 @@
 package com.example.backendbatm.controllers.API;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +22,23 @@ public class RoleRestController {
     private RoleRepository roleRepository;
 
     @GetMapping("roles")
-    public List<Role> get(){
+    public List<Role> get() {
         return roleRepository.findAll();
     }
 
     @GetMapping("roles/{id}")
-    public Role getRoleById(@PathVariable(required = true) Integer id){
+    public Role getRoleById(@PathVariable(required = true) Integer id) {
         return roleRepository.findById(id).orElse(null);
     }
 
     @PostMapping("roles")
-    public boolean save(@RequestBody Role role){
+    public boolean save(@RequestBody Role role) {
         Role result = roleRepository.save(role);
         return roleRepository.findById(result.getId()).isPresent();
     }
 
     @DeleteMapping("roles/{id}")
-    public boolean deleteById(@PathVariable(required = true) Integer id){
+    public boolean deleteById(@PathVariable(required = true) Integer id) {
         roleRepository.deleteById(id);
         return roleRepository.findById(id).isEmpty();
     }
@@ -48,11 +47,11 @@ public class RoleRestController {
     public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody Role role) {
         Role roleData = roleRepository.findById(id).orElse(null);
 
-        if(roleData == null){
+        if (roleData == null) {
             return false;
         }
 
-        if(role.getName() != null && !role.getName().equals("")){
+        if (role.getName() != null && !role.getName().equals("")) {
             roleData.setName(role.getName());
         }
 

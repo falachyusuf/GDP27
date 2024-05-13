@@ -94,9 +94,10 @@ public class AuthController {
     }
 
     @PostMapping("login/submit")
-    public String loginSubmit(LoginDTO login, Model model) throws Exception{
+    public String loginSubmit(LoginDTO login, Model model) throws Exception {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
+            Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return "/home/index";
         } catch (DisabledException e) {

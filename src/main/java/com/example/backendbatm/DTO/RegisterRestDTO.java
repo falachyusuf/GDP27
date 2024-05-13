@@ -7,8 +7,6 @@ public class RegisterRestDTO {
     private String confPassword;
     private Integer roleId;
 
-
-
     public RegisterRestDTO() {
     }
 
@@ -60,5 +58,4 @@ public class RegisterRestDTO {
         this.roleId = roleId;
     }
 
-    
 }

@@ -30,37 +30,35 @@ public class AuthRestController {
   @Autowired
   private EmployeeRepository employeeRepository;
 
-
   @Autowired
   private UserRepository userRepository;
 
   @Autowired
   private PasswordEncoder passwordEncoder;
 
-
   @PostMapping("auth/register")
-  public boolean register(@RequestBody RegisterRestDTO register){
+  public boolean register(@RequestBody RegisterRestDTO register) {
     String name = register.getName();
     String email = register.getEmail();
     String password = register.getPassword();
     String confPassword = register.getConfPassword();
     Integer roleId = register.getRoleId();
     Employee employeeExist = employeeRepository.findEmpByEmail(email);
-        if (employeeExist != null) {
-            return false;
-        }
-    if(!password.equals(confPassword)){
+    if (employeeExist != null) {
+      return false;
+    }
+    if (!password.equals(confPassword)) {
       return false;
     }
     Role role = roleRepository.findById(roleId).orElse(null);
-    if(role == null){
+    if (role == null) {
       return false;
     }
     Employee employee = new Employee();
     employee.setName(name);
     employee.setEmail(email);
     Employee employeeSaved = employeeRepository.save(employee);
-    if(employeeSaved == null){
+    if (employeeSaved == null) {
       return false;
     } else {
       User user = new User();
@@ -71,7 +69,6 @@ public class AuthRestController {
     }
     return userRepository.findById(employeeSaved.getId()).isPresent();
   }
-
 
   @PostMapping("auth/login")
   public boolean login(@RequestBody LoginDTO login) {
@@ -92,7 +89,6 @@ public class AuthRestController {
     if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
       return false;
     }
-
 
     return true;
   }

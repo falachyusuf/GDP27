@@ -3,6 +3,8 @@ package com.example.backendbatm.controllers.API;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backendbatm.DTO.ChangeDTO;
 import com.example.backendbatm.DTO.LoginDTO;
 import com.example.backendbatm.DTO.RegisterRestDTO;
+import com.example.backendbatm.handler.CustomResponse;
 import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
@@ -94,18 +97,27 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/change-password")
-  public boolean changePassword(@RequestBody ChangeDTO changeDTO) {
+  public ResponseEntity<Object> changePassword(@RequestBody ChangeDTO changeDTO) {
     String email = changeDTO.getEmail();
     String oldPassword = changeDTO.getOldPassword();
     String newPassword = changeDTO.getNewPassword();
-    Employee employee = employeeRepository.findEmpByEmail(email);
-    User user = userRepository.findById(employee.getId()).get();
-    if (passwordEncoder.matches(oldPassword, user.getPassword())) {
-      user.setPassword(passwordEncoder.encode(newPassword));
-      userRepository.save(user);
-      return true;
+    Employee employeeByEmail = employeeRepository.findEmpByEmail(email);
+    User userById = null;
+
+    try {
+      userById = userRepository.findById(employeeByEmail.getId()).orElse(null);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return CustomResponse.generate(HttpStatus.NOT_FOUND, "Email doesn't exist");
     }
-    return false;
+
+    if (!passwordEncoder.matches(oldPassword, userById.getPassword())) {
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Old password and user password is not matches");
+    }
+
+    userById.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(userById);
+    return CustomResponse.generate(HttpStatus.OK, "Password is changed");
   }
 
   @PutMapping("auth/forgot-password")

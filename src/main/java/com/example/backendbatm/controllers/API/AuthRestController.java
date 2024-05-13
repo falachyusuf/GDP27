@@ -3,6 +3,8 @@ package com.example.backendbatm.controllers.API;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backendbatm.DTO.ChangeDTO;
 import com.example.backendbatm.DTO.LoginDTO;
 import com.example.backendbatm.DTO.RegisterRestDTO;
+import com.example.backendbatm.handler.CustomResponse;
 import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
@@ -71,26 +74,26 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/login")
-  public boolean login(@RequestBody LoginDTO login) {
+  public ResponseEntity<Object> login(@RequestBody LoginDTO login) {
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
 
     if (employee == null) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
     Optional<User> optional = userRepository.findById(employee.getId());
 
     if (optional.isEmpty()) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
     User user = optional.get();
 
     if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
-    return true;
+    return CustomResponse.generate(HttpStatus.OK, "Success Login");
   }
 
   @PostMapping("auth/change-password")

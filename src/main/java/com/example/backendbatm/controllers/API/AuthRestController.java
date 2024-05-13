@@ -74,26 +74,26 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/login")
-  public boolean login(@RequestBody LoginDTO login) {
+  public ResponseEntity<Object> login(@RequestBody LoginDTO login) {
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
 
     if (employee == null) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
     Optional<User> optional = userRepository.findById(employee.getId());
 
     if (optional.isEmpty()) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
     User user = optional.get();
 
     if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
-    return true;
+    return CustomResponse.generate(HttpStatus.OK, "Success Login");
   }
 
   @PostMapping("auth/change-password")
@@ -121,20 +121,18 @@ public class AuthRestController {
   }
 
   @PutMapping("auth/forgot-password")
-  public boolean forgotPassword(@RequestBody LoginDTO login) {
+  public ResponseEntity<Object> forgotPassword(@RequestBody LoginDTO login) {
     String newPassword = login.getPassword();
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
 
     if (employee == null) {
-      return false;
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Data Not Found");
     }
 
     if (newPassword != "") {
       employee.getUser().setPassword(passwordEncoder.encode(newPassword));
       employeeRepository.save(employee);
-      return true;
-    }
-
-    return false;
+      return CustomResponse.generate(HttpStatus.OK, "Data Successfully Updated");
+    } else return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Empty Password Field");
   }
 }

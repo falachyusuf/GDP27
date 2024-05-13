@@ -74,26 +74,26 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/login")
-  public boolean login(@RequestBody LoginDTO login) {
+  public ResponseEntity<Object> login(@RequestBody LoginDTO login) {
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
 
     if (employee == null) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
     Optional<User> optional = userRepository.findById(employee.getId());
 
     if (optional.isEmpty()) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
     User user = optional.get();
 
     if (!passwordEncoder.matches(login.getPassword(), user.getPassword())) {
-      return false;
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
-    return true;
+    return CustomResponse.generate(HttpStatus.OK, "Success Login");
   }
 
   @PostMapping("auth/change-password")

@@ -1,8 +1,8 @@
 package com.example.backendbatm.controllers.API;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backendbatm.DTO.UserRequestDTO;
+import com.example.backendbatm.handler.CustomResponse;
 import com.example.backendbatm.model.Role;
 import com.example.backendbatm.model.User;
 import com.example.backendbatm.repository.RoleRepository;
@@ -33,36 +34,41 @@ public class UserRestController {
   private PasswordEncoder passwordEncoder;
 
   @GetMapping("users")
-  public List<User> getAll() {
-    return userRepository.findAll();
+  public ResponseEntity<Object> getAll() {
+    return CustomResponse.generate(HttpStatus.OK, "Data Retrieved", userRepository.findAll());
   }
 
   @GetMapping("users/{id}")
-  public User getById(@PathVariable(required = true) Integer id) {
-    return userRepository.findById(id).orElse(null);
+  public ResponseEntity<Object> getById(@PathVariable(required = true) Integer id) {
+    return CustomResponse.generate(HttpStatus.OK, "Data Retrieved", userRepository.findById(id).orElse(null));
   }
 
   @PostMapping("users")
-  public boolean save(@RequestBody User user) {
+  public ResponseEntity<Object> save(@RequestBody User user) {
     User result = userRepository.save(user);
-    return userRepository.findById(result.getId()).isPresent();
+    if (userRepository.findById(result.getId()).isEmpty()) {
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Failed Created User");
+    }
+    return CustomResponse.generate(HttpStatus.CREATED, "User Created");
   }
 
   @PutMapping("users/{id}")
-  public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody UserRequestDTO editData) {
+  public ResponseEntity<Object> updateById(@PathVariable(required = true) Integer id,
+      @RequestBody UserRequestDTO editData) {
     User userData = userRepository.findById(id).orElse(null);
 
     if (userData == null) {
-      return false;
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Requested User Data is Not Found");
     }
 
     if (editData.getRoleId() != null) {
       Role role = roleRepository.findById(editData.getRoleId()).get();
 
+      
       if (role == null) {
-        return false;
+        return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Role is Not Found");
       }
-
+      
       userData.setRole(role);
     }
 
@@ -73,12 +79,15 @@ public class UserRestController {
     }
 
     userRepository.save(userData);
-    return true;
+    return CustomResponse.generate(HttpStatus.OK, "User Data Modified");
   }
 
   @DeleteMapping("users/{id}")
-  public boolean deleteById(@PathVariable(required = true) Integer id) {
+  public ResponseEntity<Object> deleteById(@PathVariable(required = true) Integer id) {
     userRepository.deleteById(id);
-    return userRepository.findById(id).isEmpty();
+    if (!userRepository.findById(id).isEmpty()) {
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Failed to Delete user Data");
+    }
+    return CustomResponse.generate(HttpStatus.OK, "Successfully delete User");
   }
 }

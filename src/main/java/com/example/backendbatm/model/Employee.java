@@ -7,6 +7,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "tb_m_employee")
 public class Employee {
@@ -16,6 +18,7 @@ public class Employee {
     String name;
     String email;
     @OneToOne(mappedBy = "employee")
+    @JsonIgnore
     private User user;
 
     public Employee() {

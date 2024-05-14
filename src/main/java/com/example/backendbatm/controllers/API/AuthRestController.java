@@ -55,37 +55,41 @@ public class AuthRestController {
   private JwtTokenUtil jwtTokenUtil;
 
   @PostMapping("auth/register")
-  public boolean register(@RequestBody RegisterRestDTO register) {
-    String name = register.getName();
-    String email = register.getEmail();
-    String password = register.getPassword();
-    String confPassword = register.getConfPassword();
-    Integer roleId = register.getRoleId();
-    Employee employeeExist = employeeRepository.findEmpByEmail(email);
-    if (employeeExist != null) {
-      return false;
+  public ResponseEntity<Object> register(@RequestBody RegisterRestDTO register) {
+    try {
+      String name = register.getName();
+      String email = register.getEmail();
+      String password = register.getPassword();
+      String confPassword = register.getConfPassword();
+      Integer roleId = register.getRoleId();
+      Employee employeeExist = employeeRepository.findEmpByEmail(email);
+      if (employeeExist != null) {
+        return CustomResponse.generate(HttpStatus.CONFLICT, "Employee already exists");
+      }
+      if (!password.equals(confPassword)) {
+        return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Confirm Password is incorrect");
+      }
+      Role role = roleRepository.findById(roleId).orElse(null);
+      if (role == null) {
+        return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Role not found");
+      }
+      Employee employee = new Employee();
+      employee.setName(name);
+      employee.setEmail(email);
+      Employee employeeSaved = employeeRepository.save(employee);
+      if (employeeSaved == null) {
+        return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Register failed");
+      } else {
+        User user = new User();
+        user.setId(employeeSaved.getId());
+        user.setPassword(passwordEncoder.encode(password));
+        user.setRole(role);
+        userRepository.save(user);
+      }
+      return CustomResponse.generate(HttpStatus.OK, "Register successful");
+    } catch (Exception e) {
+      return CustomResponse.generate(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
     }
-    if (!password.equals(confPassword)) {
-      return false;
-    }
-    Role role = roleRepository.findById(roleId).orElse(null);
-    if (role == null) {
-      return false;
-    }
-    Employee employee = new Employee();
-    employee.setName(name);
-    employee.setEmail(email);
-    Employee employeeSaved = employeeRepository.save(employee);
-    if (employeeSaved == null) {
-      return false;
-    } else {
-      User user = new User();
-      user.setId(employeeSaved.getId());
-      user.setPassword(passwordEncoder.encode(password));
-      user.setRole(role);
-      userRepository.save(user);
-    }
-    return userRepository.findById(employeeSaved.getId()).isPresent();
   }
 
   @PostMapping("auth/login")
@@ -117,18 +121,27 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/change-password")
-  public boolean changePassword(@RequestBody ChangeDTO changeDTO) {
+  public ResponseEntity<Object> changePassword(@RequestBody ChangeDTO changeDTO) {
     String email = changeDTO.getEmail();
     String oldPassword = changeDTO.getOldPassword();
     String newPassword = changeDTO.getNewPassword();
-    Employee employee = employeeRepository.findEmpByEmail(email);
-    User user = userRepository.findById(employee.getId()).get();
-    if (passwordEncoder.matches(oldPassword, user.getPassword())) {
-      user.setPassword(passwordEncoder.encode(newPassword));
-      userRepository.save(user);
-      return true;
+    Employee employeeByEmail = employeeRepository.findEmpByEmail(email);
+    User userById = null;
+
+    try {
+      userById = userRepository.findById(employeeByEmail.getId()).orElse(null);
+    } catch (Exception e) {
+      e.printStackTrace();
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email doesn't exist");
     }
-    return false;
+
+    if (!passwordEncoder.matches(oldPassword, userById.getPassword())) {
+      return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Old password is invalid");
+    }
+
+    userById.setPassword(passwordEncoder.encode(newPassword));
+    userRepository.save(userById);
+    return CustomResponse.generate(HttpStatus.OK, "Password is changed");
   }
 
   @PutMapping("auth/forgot-password")
@@ -144,6 +157,7 @@ public class AuthRestController {
       employee.getUser().setPassword(passwordEncoder.encode(newPassword));
       employeeRepository.save(employee);
       return CustomResponse.generate(HttpStatus.OK, "Data Successfully Updated");
-    } else return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Empty Password Field");
+    } else
+      return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Empty Password Field");
   }
 }

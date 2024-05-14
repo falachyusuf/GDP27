@@ -5,6 +5,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -15,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backendbatm.DTO.ChangeDTO;
 import com.example.backendbatm.DTO.LoginDTO;
 import com.example.backendbatm.DTO.RegisterRestDTO;
+import com.example.backendbatm.config.MyUserDetails;
+import com.example.backendbatm.config.jwt.JwtTokenUtil;
 import com.example.backendbatm.handler.CustomResponse;
 import com.example.backendbatm.model.Employee;
 import com.example.backendbatm.model.Role;
@@ -38,6 +44,15 @@ public class AuthRestController {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private AuthenticationManager authenticationManager;
+
+  @Autowired
+  private MyUserDetails myUserDetails;
+
+  @Autowired
+  private JwtTokenUtil jwtTokenUtil;
 
   @PostMapping("auth/register")
   public boolean register(@RequestBody RegisterRestDTO register) {
@@ -93,7 +108,12 @@ public class AuthRestController {
       return CustomResponse.generate(HttpStatus.UNAUTHORIZED, "Email or Password Wrong!");
     }
 
-    return CustomResponse.generate(HttpStatus.OK, "Success Login");
+    Authentication authentication = authenticationManager
+                    .authenticate(new UsernamePasswordAuthenticationToken(login.getEmail(), login.getPassword()));
+    
+    final UserDetails userDetails = myUserDetails.loadUserByUsername(login.getEmail());
+    final String token = jwtTokenUtil.generateToken(userDetails);
+    return CustomResponse.generate(HttpStatus.OK, "Success Login", token);
   }
 
   @PostMapping("auth/change-password")

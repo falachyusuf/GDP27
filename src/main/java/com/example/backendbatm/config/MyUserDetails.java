@@ -30,7 +30,7 @@ public class MyUserDetails implements UserDetails, UserDetailsService{
         this.username = email;
         this.password = password;
         this.fullname = fullname;
-        this.authority = new SimpleGrantedAuthority(role);
+        this.authority = new SimpleGrantedAuthority("ROLE_" + role);
     }
 
     @Override

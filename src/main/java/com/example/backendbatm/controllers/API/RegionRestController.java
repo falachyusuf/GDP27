@@ -1,8 +1,8 @@
 package com.example.backendbatm.controllers.API;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backendbatm.DTO.RegionDTO;
+import com.example.backendbatm.handler.CustomResponse;
 import com.example.backendbatm.model.Region;
 import com.example.backendbatm.repository.RegionRepository;
 
@@ -23,40 +24,65 @@ public class RegionRestController {
     private RegionRepository regionRepository;
 
     @GetMapping("regions")
-    public List<Region> getAll() {
-        return regionRepository.findAll();
+    public ResponseEntity<Object> getAll() {
+        return CustomResponse.generate(HttpStatus.OK, "Data retrieved", regionRepository.findAll());
     }
 
     @GetMapping("regions/{id}")
-    public Region getById(@PathVariable(required = true) Integer id) {
-        return regionRepository.findById(id).orElse(null);
-    }
-
-    @PostMapping("regions")
-    public boolean save(@RequestBody Region region) {
-        Region result = regionRepository.save(region);
-        return regionRepository.findById(result.getId()).isPresent();
-    }
-
-    @PatchMapping("regions/{id}")
-    public boolean updateById(@PathVariable(required = true) Integer id, @RequestBody RegionDTO regionDTO) {
+    public ResponseEntity<Object> getById(@PathVariable(required = true) Integer id) {
         Region regionById = regionRepository.findById(id).orElse(null);
-
         try {
-            if (!regionDTO.getName().equals(null) && regionDTO.getName().length() != 0) {
-                regionById.setName(regionDTO.getName());
+            if (!regionById.equals(null)) {
+                return CustomResponse.generate(HttpStatus.OK, "Data is exist", regionById);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Region updateRegion = regionRepository.save(regionById);
-        return regionRepository.findById(updateRegion.getId()).isPresent();
+        return CustomResponse.generate(HttpStatus.NOT_FOUND, "Data is not exist");
+    }
+
+    @PostMapping("regions")
+    public ResponseEntity<Object> save(@RequestBody Region region) {
+        regionRepository.save(region);
+
+        return CustomResponse.generate(HttpStatus.CREATED, "Data is created");
+    }
+
+    @PatchMapping("regions/{id}")
+    public ResponseEntity<Object> updateById(@PathVariable(required = true) Integer id,
+            @RequestBody RegionDTO regionDTO) {
+        Region regionById = regionRepository.findById(id).orElse(null);
+
+        try {
+            if (!regionById.equals(null)) {
+                if (!regionDTO.getName().equals(null) && regionDTO.getName().length() != 0) {
+                    regionById.setName(regionDTO.getName());
+                }
+                regionRepository.save(regionById);
+
+                return CustomResponse.generate(HttpStatus.OK, "Data is updated");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return CustomResponse.generate(HttpStatus.NOT_FOUND, "Data is not exist, update is failed");
     }
 
     @DeleteMapping("regions/{id}")
-    public boolean deleteById(@PathVariable(required = true) Integer id) {
-        regionRepository.deleteById(id);
-        return regionRepository.findById(id).isEmpty();
+    public ResponseEntity<Object> deleteById(@PathVariable(required = true) Integer id) {
+        try {
+            Region regionById = regionRepository.findById(id).orElse(null);
+            if (!regionById.equals(null)) {
+                regionRepository.deleteById(id);
+            }
+
+            return CustomResponse.generate(HttpStatus.OK, "Data is deleted");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return CustomResponse.generate(HttpStatus.NOT_FOUND, "Data is not exist, delete is failed");
     }
 }

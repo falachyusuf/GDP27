@@ -55,6 +55,10 @@ public class MyUserDetails implements UserDetails, UserDetailsService{
         return username;
     }
 
+    public String getFullname(){
+        return fullname;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;

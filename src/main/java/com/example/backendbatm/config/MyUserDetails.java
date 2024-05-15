@@ -74,4 +74,10 @@ public class MyUserDetails implements UserDetails, UserDetailsService{
     public boolean isEnabled() {
         return true;
     }
+
+    public String getFullname() {
+        return fullname;
+    }
+
+    
 }

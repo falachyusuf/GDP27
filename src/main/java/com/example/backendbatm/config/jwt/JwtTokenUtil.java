@@ -11,6 +11,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
+import com.example.backendbatm.config.MyUserDetails;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -73,6 +75,13 @@ public class JwtTokenUtil implements Serializable {
         if(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("Manager"))){
             claims.put("role", "Manager");
         }
+		if(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("Admin"))){
+			claims.put("role", "Admin");
+		}
+		if(userDetails instanceof MyUserDetails){
+			String fullName = ((MyUserDetails)userDetails).getFullname();
+			claims.put("fullname", fullName);
+		}
 
 		return doGenerateToken(claims, userDetails.getUsername());
 	}

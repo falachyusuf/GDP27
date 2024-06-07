@@ -5,6 +5,7 @@ package com.example.backendbatm.controllers.API;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,6 +26,7 @@ public class RoleRestController {
     private RoleRepository roleRepository;
 
     @GetMapping("roles")
+    @CrossOrigin
     public ResponseEntity<Object> get() {
         try {
             return CustomResponse.generate(HttpStatus.OK, "Data retrieved successfully", roleRepository.findAll());
@@ -34,6 +36,7 @@ public class RoleRestController {
     }
 
     @GetMapping("roles/{id}")
+    @CrossOrigin
     public ResponseEntity<Object> getRoleById(@PathVariable(required = true) Integer id) {
         try {
             return CustomResponse.generate(HttpStatus.OK, "Data retrieved successfully", roleRepository.findById(id));
@@ -43,6 +46,7 @@ public class RoleRestController {
     }
 
     @PostMapping("roles")
+    @CrossOrigin
     public ResponseEntity<Object> save(@RequestBody Role role) {
         try {
             Role result = roleRepository.save(role);
@@ -56,6 +60,7 @@ public class RoleRestController {
     }
 
     @DeleteMapping("roles/{id}")
+    @CrossOrigin
     public ResponseEntity<Object> deleteById(@PathVariable(required = true) Integer id) {
         try {
             roleRepository.deleteById(id);
@@ -66,6 +71,7 @@ public class RoleRestController {
     }
 
     @PutMapping("role/{id}")
+    @CrossOrigin
     public ResponseEntity<Object> updateById(@PathVariable(required = true) Integer id, @RequestBody Role role) {
         try {
             Role roleData = roleRepository.findById(id).orElse(null);

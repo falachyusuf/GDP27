@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -49,13 +50,14 @@ public class AuthRestController {
   private JwtTokenUtil jwtTokenUtil;
 
   @PostMapping("auth/register")
+  @CrossOrigin
   public ResponseEntity<Object> register(@RequestBody RegisterRestDTO register) {
     try {
       String name = register.getName();
       String email = register.getEmail();
       String password = register.getPassword();
       String confPassword = register.getConfPassword();
-      Integer roleId = register.getRoleId();
+      Integer roleId = roleRepository.findRoleIdByLevel();
       Employee employeeExist = employeeRepository.findEmpByEmail(email);
       if (employeeExist != null) {
         return CustomResponse.generate(HttpStatus.CONFLICT, "Employee already exists");
@@ -63,10 +65,9 @@ public class AuthRestController {
       if (!password.equals(confPassword)) {
         return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Confirm Password is incorrect");
       }
+
       Role role = roleRepository.findById(roleId).orElse(null);
-      if (role == null) {
-        return CustomResponse.generate(HttpStatus.BAD_REQUEST, "Role not found");
-      }
+
       Employee employee = new Employee();
       employee.setName(name);
       employee.setEmail(email);
@@ -87,6 +88,7 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/login")
+  @CrossOrigin
   public ResponseEntity<Object> login(@RequestBody LoginDTO login) {
     Employee employee = employeeRepository.findEmpByEmail(login.getEmail());
 
@@ -113,6 +115,7 @@ public class AuthRestController {
   }
 
   @PostMapping("auth/change-password")
+  @CrossOrigin
   public ResponseEntity<Object> changePassword(@RequestBody ChangeDTO changeDTO) {
     String email = changeDTO.getEmail();
     String oldPassword = changeDTO.getOldPassword();
@@ -136,6 +139,7 @@ public class AuthRestController {
     return CustomResponse.generate(HttpStatus.OK, "Password is changed");
   }
 
+  @CrossOrigin
   @PutMapping("auth/forgot-password")
   public ResponseEntity<Object> forgotPassword(@RequestBody LoginDTO login) {
     String newPassword = login.getPassword();

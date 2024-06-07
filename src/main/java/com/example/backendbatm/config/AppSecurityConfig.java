@@ -38,7 +38,7 @@ public class AppSecurityConfig {
         .authorizeHttpRequests((auth) -> {
           try {
             auth
-                // .antMatchers("/api/**").permitAll()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/auth/login/form", "/auth/forgot-password/form", "/auth/forgot-password/submit").permitAll()
                 .antMatchers("/auth/change/form", "/auth/change/submit").authenticated()
                 .antMatchers("/user/**", "/region/**").authenticated()

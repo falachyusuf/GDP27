@@ -44,7 +44,7 @@ public class AppSecurityConfig {
                 .antMatchers("/user/**", "/region/**").authenticated()
                 .antMatchers("/bot/**").hasAnyRole("Manager", "Admin")
                 .antMatchers("/category/**").authenticated()
-                .antMatchers("/api/department/**").hasAuthority("Manager")
+                .antMatchers("/api/department/**").hasRole("Manager")
                 // .anyRequest().permitAll()
                 .and()
                 .formLogin()
